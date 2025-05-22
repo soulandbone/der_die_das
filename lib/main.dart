@@ -5,6 +5,7 @@ import 'package:der_die_das/domain/usecases/get_questions.dart';
 import 'package:der_die_das/firebase_options.dart';
 import 'package:der_die_das/presentation/bloc/question_bloc.dart';
 import 'package:der_die_das/presentation/screens/home.dart';
+import 'package:der_die_das/theming/app_theming.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,9 +34,7 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
+        theme: AppTheme.dark,
         home: HomeScreen(),
       ),
     );

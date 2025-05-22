@@ -26,9 +26,14 @@ class _CardQuestionState extends State<CardQuestion> {
     bool isCorrect = answer.toString() == widget.correctAnswer;
 
     return Card(
+      elevation: 8,
+      color: Theme.of(context).colorScheme.primaryContainer,
       margin: EdgeInsets.symmetric(horizontal: 15),
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.red),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.onPrimary,
+          width: 4,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -39,7 +44,7 @@ class _CardQuestionState extends State<CardQuestion> {
           Container(
             padding: EdgeInsets.all(10),
             child: Text(
-              '___ ${widget.question}',
+              '$answer ${widget.question}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -88,7 +93,7 @@ class _CardQuestionState extends State<CardQuestion> {
               ),
             ],
           ),
-          SizedBox(height: 50),
+
           ElevatedButton(
             onPressed: () {
               context.read<QuestionBloc>().add(
