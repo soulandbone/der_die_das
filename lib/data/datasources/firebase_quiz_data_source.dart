@@ -9,7 +9,7 @@ class FirebaseQuizDataSource {
   Future<List<Question>> getQuestions() async {
     var questionsRef = FirebaseFirestore.instance.collection('questions');
     var snapshot = await questionsRef.get();
-    print('Function is executing');
+
     var list =
         snapshot.docs
             .map(

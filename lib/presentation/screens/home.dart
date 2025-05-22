@@ -1,5 +1,7 @@
 import 'package:der_die_das/presentation/bloc/question_bloc.dart';
+import 'package:der_die_das/presentation/screens/end.dart';
 import 'package:der_die_das/presentation/widgets/card_question.dart';
+import 'package:der_die_das/presentation/widgets/current_score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,23 +11,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Whatever')),
+      appBar: AppBar(title: Text('Der, Die, Das')),
       body: BlocBuilder<QuestionBloc, QuestionState>(
         //buildWhen: (previous, current) => current is QuestionState,
         builder: (context, state) {
           if (state is QuestionsLoading) {
-            print('inside of QuestionsLoading');
             return Center(child: CircularProgressIndicator());
           } else if (state is QuestionsLoaded) {
-            print('it is inside of QuestionLoaded');
-            return ListView.builder(
-              itemCount: state.questions.length,
-              itemBuilder:
-                  (context, index) => CardQuestion(
-                    question: state.questions[index].word,
-                    correctAnswer: state.questions[index].correctAnswer,
-                  ),
+            return Column(
+              children: [
+                CurrentScore(state.currentScore),
+                CardQuestion(
+                  // questionBloc: questionBloc,
+                  question: state.questions[state.currentIndex].word,
+                  correctAnswer:
+                      state.questions[state.currentIndex].correctAnswer,
+                ),
+              ],
             );
+          } else if (state is ReachedEndOfQuestionnaire) {
+            return EndScreen();
           }
           return Container();
         },

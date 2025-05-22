@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CurrentScore extends StatelessWidget {
-  const CurrentScore({super.key});
+  const CurrentScore(this.score, {super.key});
+
+  final int score;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,7 @@ class CurrentScore extends StatelessWidget {
             'Current Score',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
+          Text(score.toString()),
         ],
       ),
     );

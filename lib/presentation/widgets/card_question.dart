@@ -1,4 +1,6 @@
+import 'package:der_die_das/presentation/bloc/question_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum Answers { answer1, answer2, answer3 }
 
@@ -6,6 +8,7 @@ class CardQuestion extends StatefulWidget {
   const CardQuestion({
     required this.question,
     required this.correctAnswer,
+
     super.key,
   });
   final String question;
@@ -16,9 +19,12 @@ class CardQuestion extends StatefulWidget {
 }
 
 class _CardQuestionState extends State<CardQuestion> {
-  Answers answer = Answers.answer1;
+  String answer = 'Der';
+
   @override
   Widget build(BuildContext context) {
+    bool isCorrect = answer.toString() == widget.correctAnswer;
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 15),
       shape: RoundedRectangleBorder(
@@ -33,7 +39,7 @@ class _CardQuestionState extends State<CardQuestion> {
           Container(
             padding: EdgeInsets.all(10),
             child: Text(
-              '___ Spiegel',
+              '___ ${widget.question}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -42,7 +48,7 @@ class _CardQuestionState extends State<CardQuestion> {
             children: [
               Text('Der'),
               Radio(
-                value: Answers.answer1,
+                value: 'Der',
                 groupValue: answer,
                 onChanged: (value) {
                   setState(() {
@@ -57,7 +63,7 @@ class _CardQuestionState extends State<CardQuestion> {
             children: [
               Text('Die'),
               Radio(
-                value: Answers.answer2,
+                value: 'Die',
                 groupValue: answer,
                 onChanged: (value) {
                   setState(() {
@@ -72,7 +78,7 @@ class _CardQuestionState extends State<CardQuestion> {
             children: [
               Text('Das'),
               Radio(
-                value: Answers.answer3,
+                value: 'Das',
                 groupValue: answer,
                 onChanged: (value) {
                   setState(() {
@@ -83,7 +89,14 @@ class _CardQuestionState extends State<CardQuestion> {
             ],
           ),
           SizedBox(height: 50),
-          ElevatedButton(onPressed: () {}, child: Text('Validate')),
+          ElevatedButton(
+            onPressed: () {
+              context.read<QuestionBloc>().add(
+                AnswerConfirmed(isCorrect: isCorrect),
+              );
+            },
+            child: Text('Validate'),
+          ),
           SizedBox(height: 20),
         ],
       ),
