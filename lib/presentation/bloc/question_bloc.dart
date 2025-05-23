@@ -22,7 +22,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     try {
       final questions = await getQuestions.call();
       questions.shuffle();
-      emit(QuestionsLoaded(questions: questions));
+      emit(QuizProgress(questions: questions));
     } catch (e) {
       emit(QuestionsError(e.toString()));
     }
@@ -32,24 +32,24 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     AnswerConfirmed event,
     Emitter<QuestionState> emit,
   ) async {
-    final questions = await getQuestions.call();
-    final currentIndex = (state as QuestionsLoaded).currentIndex;
-    var currentScore = (state as QuestionsLoaded).currentScore;
-    var nextIndex = currentIndex + 1;
+    final quizProgressState = (state as QuizProgress);
+    final questions = quizProgressState.questions;
+    var currentIndex = quizProgressState.currentIndex;
+    var currentScore = quizProgressState.currentScore;
+    var totalCorrect = quizProgressState.totalCorrect;
 
     if (event.isCorrect) {
-      currentScore = (state as QuestionsLoaded).currentScore + 100;
+      currentScore += 100;
+      totalCorrect++;
     }
 
-    if (nextIndex == questions.length) {
-      emit(ReachedEndOfQuestionnaire());
-      return;
-    }
     emit(
-      QuestionsLoaded(
+      QuizProgress(
         questions: questions,
-        currentIndex: nextIndex,
+        currentIndex: currentIndex + 1,
         currentScore: currentScore,
+        totalCorrect: totalCorrect,
+        isFinished: currentIndex == 3 ? true : false,
       ),
     );
   }

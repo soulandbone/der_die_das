@@ -24,24 +24,22 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is QuestionsLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is QuestionsLoaded) {
+          } else if (state is QuizProgress && !state.isFinished) {
             return Column(
               children: [
                 Gap(40),
                 CurrentScore(state.currentScore),
                 Gap(120),
                 CardQuestion(
-                  // questionBloc: questionBloc,
                   question: state.questions[state.currentIndex].word,
                   correctAnswer:
                       state.questions[state.currentIndex].correctAnswer,
                 ),
               ],
             );
-          } else if (state is ReachedEndOfQuestionnaire) {
+          } else {
             return EndScreen();
           }
-          return Container();
         },
       ),
     );

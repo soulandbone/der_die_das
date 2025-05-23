@@ -7,15 +7,9 @@ final class QuestionInitial extends QuestionState {}
 class QuestionsLoading extends QuestionState {}
 
 class QuestionsLoaded extends QuestionState {
-  QuestionsLoaded({
-    required this.questions,
-    this.currentIndex = 0,
-    this.currentScore = 0,
-  });
+  QuestionsLoaded({required this.questions});
 
   final List<Question> questions;
-  final int currentIndex;
-  final int currentScore;
 }
 
 class QuestionsError extends QuestionState {
@@ -23,11 +17,34 @@ class QuestionsError extends QuestionState {
   final String message;
 }
 
-class NextQuestionLoaded extends QuestionState {
-  NextQuestionLoaded(this.question);
-  final Question question;
-}
+class QuizProgress extends QuestionState {
+  QuizProgress({
+    this.currentScore = 0,
+    this.currentIndex = 0,
+    this.totalCorrect = 0,
+    required this.questions,
+    this.isFinished = false,
+  });
 
-class ReachedEndOfQuestionnaire extends QuestionState {
-  ReachedEndOfQuestionnaire();
+  final List<Question> questions;
+  final int currentScore;
+  final int currentIndex;
+  final int totalCorrect;
+  final bool isFinished;
+
+  QuizProgress copyWith({
+    List<Question>? questions,
+    int? currentScore,
+    int? currentIndex,
+    int? totalCorrect,
+    bool? isFinished,
+  }) {
+    return QuizProgress(
+      questions: questions ?? this.questions,
+      currentScore: currentScore ?? this.currentScore,
+      currentIndex: currentIndex ?? this.currentIndex,
+      totalCorrect: totalCorrect ?? this.totalCorrect,
+      isFinished: isFinished ?? this.isFinished,
+    );
+  }
 }
