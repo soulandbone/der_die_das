@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "274808548190",
-    "project_id": "der-die-das-6666",
-    "storage_bucket": "der-die-das-6666.firebasestorage.app"
+    "project_number": "77312513227",
+    "project_id": "der-die-das-app",
+    "storage_bucket": "der-die-das-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:274808548190:android:43309e1c3ec36efd16bdcf",
+        "mobilesdk_app_id": "1:77312513227:android:fdd624bf32e70064e5b74e",
         "android_client_info": {
           "package_name": "com.example.der_die_das"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAQUTT0EVzyjserImaufaWbyg_eusE49KI"
+          "current_key": "AIzaSyCLRzUImIUB3B5Qvq6hbJT6UHOKWZOorlw"
         }
       ],
       "services": {

@@ -18,10 +18,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -29,15 +26,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -65,5 +56,32 @@ class DefaultFirebaseOptions {
     projectId: PROJECT_ID_IOS,
     storageBucket: STORAGE_BUCKET_IOS,
     iosBundleId: IOS_BUNDLE_ID,
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: API_KEY_WEB,
+    appId: APP_ID_WEB,
+    messagingSenderId: MESSAGING_SENDER_ID_WEB,
+    projectId: PROJECT_ID_WEB,
+    authDomain: AUTH_DOMAIN_WEB,
+    storageBucket: STORAGE_BUCKET_WEB,
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: API_KEY_MACOS,
+    appId: APP_ID_MACOS,
+    messagingSenderId: MESSAGING_SENDER_ID_MACOS,
+    projectId: PROJECT_ID_MACOS,
+    storageBucket: STORAGE_BUCKET_MACOS,
+    iosBundleId: IOS_BLUNDLE_ID_MACOS,
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: API_KEY_WINDOWS,
+    appId: APP_ID_WINDOWS,
+    messagingSenderId: MESSAGING_SENDER_ID_WINDOWS,
+    projectId: PROJECT_ID_WINDOWS,
+    authDomain: AUTH_DOMAIN_WINDOWS,
+    storageBucket: STORAGE_BUCKET_WINDOWS,
   );
 }

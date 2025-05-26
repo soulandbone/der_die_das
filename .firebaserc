@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "der-die-das-app",
+    "der die": "der-die-das-app",
+    "der-die-dass": "der-die-das-app"
+  },
+  "targets": {},
+  "etags": {}
+}
