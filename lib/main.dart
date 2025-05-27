@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:der_die_das/data/datasources/firebase_quiz_data_source.dart';
 import 'package:der_die_das/data/repositories/quiz_repository_impl.dart';
+import 'package:der_die_das/domain/usecases/check_answer.dart';
 import 'package:der_die_das/domain/usecases/get_questions.dart';
+import 'package:der_die_das/domain/usecases/update_score.dart';
 import 'package:der_die_das/firebase_options.dart';
 import 'package:der_die_das/presentation/bloc/question_bloc.dart';
 import 'package:der_die_das/presentation/screens/home.dart';
@@ -26,9 +28,12 @@ class MyApp extends StatelessWidget {
     var dataSource = FirebaseQuizDataSource(firestore);
     var repository = QuizRepositoryImpl(dataSource);
     var getQuestions = GetQuestions(repository: repository);
+    var checkAnswer = CheckAnswer();
+    var updateScore = UpdateScore();
+
     return BlocProvider(
       create: (context) {
-        return (QuestionBloc(getQuestions)..add(
+        return (QuestionBloc(getQuestions, checkAnswer, updateScore)..add(
           LoadQuestions(),
         )); // It's the same as QuestionBloc questionBloc = QuestionBloc(getQuestions); questionBloc.add(LoadQuestions())
       },

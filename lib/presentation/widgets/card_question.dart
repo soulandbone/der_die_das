@@ -5,14 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 enum Answers { answer1, answer2, answer3 }
 
 class CardQuestion extends StatefulWidget {
-  const CardQuestion({
-    required this.question,
-    required this.correctAnswer,
-
-    super.key,
-  });
+  const CardQuestion({required this.question, super.key});
   final String question;
-  final String correctAnswer;
 
   @override
   State<CardQuestion> createState() => _CardQuestionState();
@@ -23,8 +17,6 @@ class _CardQuestionState extends State<CardQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    bool isCorrect = answer.toString() == widget.correctAnswer;
-
     return Card(
       elevation: 8,
       color: Theme.of(context).colorScheme.primaryContainer,
@@ -96,9 +88,7 @@ class _CardQuestionState extends State<CardQuestion> {
 
           ElevatedButton(
             onPressed: () {
-              context.read<QuestionBloc>().add(
-                AnswerConfirmed(isCorrect: isCorrect),
-              );
+              context.read<QuestionBloc>().add(AnswerConfirmed(answer: answer));
             },
             child: Text('Validate'),
           ),

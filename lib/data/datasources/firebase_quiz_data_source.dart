@@ -19,7 +19,7 @@ class FirebaseQuizDataSource {
               ),
             )
             .toList();
-    print('list is $list');
+
     return list;
   }
 }

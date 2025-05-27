@@ -32,8 +32,6 @@ class HomeScreen extends StatelessWidget {
                 Gap(120),
                 CardQuestion(
                   question: state.questions[state.currentIndex].word,
-                  correctAnswer:
-                      state.questions[state.currentIndex].correctAnswer,
                 ),
               ],
             );
