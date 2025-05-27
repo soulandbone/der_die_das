@@ -8,22 +8,33 @@ class Summary extends StatelessWidget {
     super.key,
   });
 
-  final int totalQuestions;
-  final int correctQuestions;
+  final double totalQuestions;
+  final double correctQuestions;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          RowSummary(text: 'Total # of Questions', number: totalQuestions),
-          RowSummary(
-            text: 'Total # of  Correct Questions',
-            number: correctQuestions,
-          ),
-        ],
+      margin: EdgeInsets.symmetric(horizontal: 80),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            RowSummary(
+              text: 'Total # of Questions',
+              number: totalQuestions.toStringAsFixed(0),
+            ),
+            RowSummary(
+              text: 'Total # of  Correct Questions',
+              number: totalQuestions.toStringAsFixed(0),
+            ),
+            RowSummary(
+              text: '% of completion',
+              number: ((correctQuestions / totalQuestions) * 100)
+                  .toStringAsFixed(2),
+            ),
+          ],
+        ),
       ),
     );
   }

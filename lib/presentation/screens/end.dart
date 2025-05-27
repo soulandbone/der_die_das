@@ -18,8 +18,8 @@ class EndScreen extends StatelessWidget {
             children: [
               Gap(10),
               Summary(
-                totalQuestions: state.questions.length,
-                correctQuestions: state.totalCorrect,
+                totalQuestions: state.questions.length.toDouble(),
+                correctQuestions: state.totalCorrect.toDouble(),
               ),
             ],
           ),
