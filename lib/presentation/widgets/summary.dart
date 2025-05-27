@@ -16,19 +16,22 @@ class Summary extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 80),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             RowSummary(
-              text: 'Total # of Questions',
+              firstTextColor: Theme.of(context).colorScheme.primary,
+              text: 'Questions',
               number: totalQuestions.toStringAsFixed(0),
             ),
             RowSummary(
-              text: 'Total # of  Correct Questions',
+              firstTextColor: Theme.of(context).colorScheme.secondary,
+              text: 'Correct Questions',
               number: totalQuestions.toStringAsFixed(0),
             ),
             RowSummary(
+              firstTextColor: Theme.of(context).colorScheme.tertiary,
               text: '% of completion',
               number: ((correctQuestions / totalQuestions) * 100)
                   .toStringAsFixed(2),

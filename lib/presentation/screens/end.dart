@@ -14,14 +14,16 @@ class EndScreen extends StatelessWidget {
       builder: (context, state) {
         final state = context.watch<QuestionBloc>().state as QuizProgress;
         return Scaffold(
-          body: Column(
-            children: [
-              Gap(10),
-              Summary(
-                totalQuestions: state.questions.length.toDouble(),
-                correctQuestions: state.totalCorrect.toDouble(),
-              ),
-            ],
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Summary(
+                  totalQuestions: state.questions.length.toDouble(),
+                  correctQuestions: state.totalCorrect.toDouble(),
+                ),
+              ],
+            ),
           ),
         );
       },
