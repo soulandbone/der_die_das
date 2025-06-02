@@ -1,4 +1,4 @@
-import 'package:der_die_das/presentation/bloc/question_bloc.dart';
+import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/screens/end.dart';
 import 'package:der_die_das/presentation/widgets/card_question.dart';
 import 'package:der_die_das/presentation/widgets/current_score.dart';

@@ -5,9 +5,11 @@ import 'package:der_die_das/domain/usecases/check_answer.dart';
 import 'package:der_die_das/domain/usecases/get_questions.dart';
 import 'package:der_die_das/domain/usecases/update_score.dart';
 import 'package:der_die_das/firebase_options.dart';
-import 'package:der_die_das/presentation/bloc/question_bloc.dart';
+import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
+import 'package:der_die_das/presentation/bloc/themeBloc/bloc/theme_bloc.dart';
 import 'package:der_die_das/presentation/screens/home.dart';
 import 'package:der_die_das/theming/app_theming.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +17,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  final themeBloc = ThemeBloc();
+
+  runApp(BlocProvider.value(value: themeBloc, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,15 +35,23 @@ class MyApp extends StatelessWidget {
     var checkAnswer = CheckAnswer();
     var updateScore = UpdateScore();
 
-    return BlocProvider(
-      create: (context) {
-        return (QuestionBloc(getQuestions, checkAnswer, updateScore)..add(
-          LoadQuestions(),
-        )); // It's the same as QuestionBloc questionBloc = QuestionBloc(getQuestions); questionBloc.add(LoadQuestions())
-      },
+    final currentState = context.watch<ThemeBloc>().state;
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  QuestionBloc(getQuestions, checkAnswer, updateScore)
+                    ..add(LoadQuestions()),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: AppTheme.dark,
+        theme:
+            currentState.runtimeType == DarkTheme
+                ? AppTheme.dark
+                : AppTheme.light,
         home: HomeScreen(),
       ),
     );
