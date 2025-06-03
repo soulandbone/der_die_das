@@ -49,9 +49,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme:
-            currentState.runtimeType == DarkTheme
-                ? AppTheme.dark
-                : AppTheme.light,
+            (currentState as ActiveTheme).mode == ThemeModeType.dark
+                ? ThemeData.dark()
+                : ThemeData.light(),
         home: HomeScreen(),
       ),
     );

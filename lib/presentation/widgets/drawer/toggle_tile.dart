@@ -13,7 +13,10 @@ class ToggleTile extends StatelessWidget {
     return ListTile(
       leading: Text('Light mode', style: TextStyle(fontSize: 16)),
       trailing: Switch(
-        value: currentState.runtimeType == LightTheme,
+        value:
+            (currentState as ActiveTheme).mode ==
+            ThemeModeType
+                .light, // currentState == LightTheme (for comparison purposes)
         onChanged: (value) {
           themeBloc.add(ToggleTheme());
         },

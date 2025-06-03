@@ -3,11 +3,9 @@ part of 'theme_bloc.dart';
 @immutable
 sealed class ThemeState {}
 
-final class ThemeInitial extends ThemeState {
-  // ThemeInitial(this.darkTheme);
-  // final ThemeData darkTheme;
+enum ThemeModeType { dark, light }
+
+final class ActiveTheme extends ThemeState {
+  ActiveTheme(this.mode);
+  final ThemeModeType mode;
 }
-
-final class DarkTheme extends ThemeState {}
-
-final class LightTheme extends ThemeState {}

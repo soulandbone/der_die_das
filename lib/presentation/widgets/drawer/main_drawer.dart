@@ -1,4 +1,3 @@
-import 'package:der_die_das/presentation/widgets/drawer/drawer_tile.dart';
 import 'package:der_die_das/presentation/widgets/drawer/toggle_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class MainDrawer extends StatelessWidget {
         children: [
           DrawerHeader(child: Text('Der, Die, Das')),
           ToggleTile(),
-          DrawerTile(icon: Icons.abc, titleText: 'Abc'),
+          //DrawerTile(icon: Icons.abc, titleText: 'Abc'),
         ],
       ),
     );
