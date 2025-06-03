@@ -12,10 +12,10 @@ class QuestionsLoaded extends QuestionState {
   final List<Question> questions;
 }
 
-class QuestionsError extends QuestionState {
-  QuestionsError(this.message);
-  final String message;
-}
+// class QuestionsError extends QuestionState {
+//   QuestionsError(this.message);
+//   final String message;
+// }
 
 class QuizProgress extends QuestionState {
   QuizProgress({

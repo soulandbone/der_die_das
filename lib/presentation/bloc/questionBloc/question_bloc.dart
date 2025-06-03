@@ -30,7 +30,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       questions.shuffle();
       emit(QuizProgress(questions: questions));
     } catch (e) {
-      emit(QuestionsError(e.toString()));
+      // emit(QuestionsError(e.toString()));
     }
   }
 
