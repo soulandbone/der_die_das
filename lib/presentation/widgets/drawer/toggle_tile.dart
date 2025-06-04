@@ -21,7 +21,7 @@ class ToggleTile extends StatelessWidget {
         ],
       ),
       trailing: Switch(
-        value: currentState is DarkTheme,
+        value: (currentState as Settings).isDark,
         onChanged: (value) {
           themeBloc.add(ToggleTheme());
         },

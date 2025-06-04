@@ -1,3 +1,4 @@
+import 'package:der_die_das/presentation/widgets/drawer/article_toggle_tile.dart';
 import 'package:der_die_das/presentation/widgets/drawer/toggle_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +25,7 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ToggleTile(),
-          //DrawerTile(icon: Icons.abc, titleText: 'Abc'),
+          ArticleToggleTile(),
         ],
       ),
     );

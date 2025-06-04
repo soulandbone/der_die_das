@@ -8,3 +8,5 @@ class AnswerConfirmed extends QuestionEvent {
   AnswerConfirmed({required this.answer});
   final String answer;
 }
+
+class ResetQuiz extends QuestionEvent {}

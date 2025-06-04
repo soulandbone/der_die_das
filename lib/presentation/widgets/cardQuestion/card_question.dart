@@ -41,11 +41,12 @@ class _CardQuestionState extends State<CardQuestion> {
           Gap(20),
           BlocBuilder<ThemeBloc, ThemeState>(
             builder: (context, state) {
-              if (state is LightTheme) {
+              final currentState = (state as Settings);
+              if (currentState.showsArticle) {
                 return Container(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '__ ${widget.question}',
+                    '$answer ${widget.question}',
                     style: GoogleFonts.merriweather(
                       textStyle: TextStyle(
                         fontSize: 24,
@@ -55,11 +56,11 @@ class _CardQuestionState extends State<CardQuestion> {
                     ),
                   ),
                 );
-              } else if (state is ShowArticle) {
+              } else if (!currentState.showsArticle) {
                 return Container(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '$answer ${widget.question}',
+                    '___ ${widget.question}',
                     style: GoogleFonts.merriweather(
                       textStyle: TextStyle(
                         fontSize: 24,

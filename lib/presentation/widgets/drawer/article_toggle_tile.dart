@@ -15,15 +15,15 @@ class ArticleToggleTile extends StatelessWidget {
       leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Show Article in Question', style: TextStyle(fontSize: 16)),
+          Text('Show Article', style: TextStyle(fontSize: 16)),
           Gap(12),
           Icon(Icons.question_mark),
         ],
       ),
       trailing: Switch(
-        value: currentState is DontShowArticle,
+        value: (currentState as Settings).showsArticle,
         onChanged: (value) {
-          themeBloc.add(ToggleTheme());
+          themeBloc.add(ToggleShowArticle());
         },
       ),
     );

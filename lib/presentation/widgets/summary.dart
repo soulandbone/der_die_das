@@ -16,7 +16,7 @@ class Summary extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 80),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

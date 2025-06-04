@@ -18,6 +18,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     : super(QuestionsLoading()) {
     on<LoadQuestions>(loadQuestions);
     on<AnswerConfirmed>(answerConfirmed);
+    on<ResetQuiz>(resetQuiz);
   }
 
   FutureOr<void> loadQuestions(
@@ -62,5 +63,11 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
         isFinished: currentIndex == questions.length - 1 ? true : false,
       ),
     );
+  }
+
+  FutureOr<void> resetQuiz(ResetQuiz event, Emitter<QuestionState> emit) {
+    final currentState = state as QuizProgress;
+    final questions = currentState.questions;
+    emit(QuizProgress(questions: questions));
   }
 }
