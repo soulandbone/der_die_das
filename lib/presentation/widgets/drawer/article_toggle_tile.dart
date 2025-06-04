@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
-class ToggleTile extends StatelessWidget {
-  const ToggleTile({super.key});
+class ArticleToggleTile extends StatelessWidget {
+  const ArticleToggleTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +15,13 @@ class ToggleTile extends StatelessWidget {
       leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Dark mode', style: TextStyle(fontSize: 16)),
+          Text('Show Article in Question', style: TextStyle(fontSize: 16)),
           Gap(12),
-          Icon(Icons.dark_mode_outlined),
+          Icon(Icons.question_mark),
         ],
       ),
       trailing: Switch(
-        value: currentState is DarkTheme,
+        value: currentState is DontShowArticle,
         onChanged: (value) {
           themeBloc.add(ToggleTheme());
         },

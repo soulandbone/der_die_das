@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CurrentScore extends StatelessWidget {
   const CurrentScore(this.score, {super.key});
@@ -7,22 +8,39 @@ class CurrentScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 8,
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.secondaryContainer,
+    return SizedBox(
+      width: 170,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onPrimary,
+            width: 4,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          children: [
-            Text(
-              'Current Score',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(score.toString(), style: TextStyle(fontSize: 20)),
-          ],
+        elevation: 8,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.secondaryContainer,
+          ),
+
+          child: Column(
+            children: [
+              Text(
+                'Score',
+                style: GoogleFonts.aleo(
+                  textStyle: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              Text(score.toString(), style: TextStyle(fontSize: 32)),
+            ],
+          ),
         ),
       ),
     );

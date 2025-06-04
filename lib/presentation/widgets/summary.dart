@@ -28,7 +28,7 @@ class Summary extends StatelessWidget {
             RowSummary(
               firstTextColor: Theme.of(context).colorScheme.secondary,
               text: 'Correct Questions',
-              number: totalQuestions.toStringAsFixed(0),
+              number: correctQuestions.toStringAsFixed(0),
             ),
             RowSummary(
               firstTextColor: Theme.of(context).colorScheme.tertiary,
