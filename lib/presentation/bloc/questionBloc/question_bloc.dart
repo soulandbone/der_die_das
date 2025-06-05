@@ -14,6 +14,11 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   final CheckAnswer checkAnswer;
   final UpdateScore updateScore;
 
+  List<Question>? savedQuestions;
+
+  List<Question>?
+  savedQuestions10; //so we dont have to fetch the questions from the server later
+
   QuestionBloc(this.getQuestions, this.checkAnswer, this.updateScore)
     : super(QuestionsLoading()) {
     on<LoadQuestions>(loadQuestions);
@@ -28,10 +33,13 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     emit(QuestionsLoading());
     try {
       final questions = await getQuestions.call();
+      savedQuestions = questions; //caching the questions
       questions.shuffle();
-      emit(QuizProgress(questions: questions));
+      final questions10 = questions.sublist(0, 10);
+      savedQuestions10 = questions10;
+      emit(QuizProgress(questions: questions10));
     } catch (e) {
-      // emit(QuestionsError(e.toString()));
+      emit(QuestionsError(e.toString()));
     }
   }
 
@@ -54,20 +62,30 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     );
     totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
 
-    emit(
-      QuizProgress(
-        questions: questions,
-        currentIndex: currentIndex + 1,
-        currentScore: score,
-        totalCorrect: totalCorrect,
-        isFinished: currentIndex == questions.length - 1 ? true : false,
-      ),
-    );
+    if (currentIndex == 9) {
+      emit(
+        QuizFinished(
+          correctQuestions: totalCorrect,
+          totalQuestions: savedQuestions10!.length,
+        ),
+      );
+    } else {
+      emit(
+        QuizProgress(
+          questions: questions,
+          currentIndex: currentIndex + 1,
+          currentScore: score,
+          totalCorrect: totalCorrect,
+        ),
+      );
+    }
   }
 
   FutureOr<void> resetQuiz(ResetQuiz event, Emitter<QuestionState> emit) {
-    final currentState = state as QuizProgress;
-    final questions = currentState.questions;
-    emit(QuizProgress(questions: questions));
+    var questions = savedQuestions;
+    if (savedQuestions != null && savedQuestions!.isNotEmpty) {
+      questions!.shuffle();
+      emit(QuizProgress(questions: questions));
+    }
   }
 }

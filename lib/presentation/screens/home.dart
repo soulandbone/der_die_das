@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is QuestionsLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is QuizProgress && !state.isFinished) {
+          } else if (state is QuizProgress) {
             return Column(
               children: [
                 Gap(40),
@@ -37,8 +37,10 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             );
-          } else {
+          } else if (state is QuizFinished) {
             return EndScreen();
+          } else {
+            return SizedBox();
           }
         },
       ),
