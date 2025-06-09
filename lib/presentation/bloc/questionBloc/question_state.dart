@@ -28,6 +28,7 @@ class QuizProgress extends QuestionState {
     this.currentScore = 0,
     this.currentIndex = 0,
     this.totalCorrect = 0,
+    this.remainingTime = 30,
     required this.questions,
   });
 
@@ -35,18 +36,21 @@ class QuizProgress extends QuestionState {
   final int currentScore;
   final int currentIndex;
   final int totalCorrect;
+  final int remainingTime;
 
   QuizProgress copyWith({
     List<Question>? questions,
     int? currentScore,
     int? currentIndex,
     int? totalCorrect,
+    int? remainingTime,
   }) {
     return QuizProgress(
       questions: questions ?? this.questions,
       currentScore: currentScore ?? this.currentScore,
       currentIndex: currentIndex ?? this.currentIndex,
       totalCorrect: totalCorrect ?? this.totalCorrect,
+      remainingTime: remainingTime ?? this.remainingTime,
     );
   }
 }

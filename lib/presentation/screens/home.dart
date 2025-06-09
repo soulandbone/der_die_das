@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
           } else if (state is QuizProgress) {
             return Column(
               children: [
+                Text(state.remainingTime.toString()),
                 Gap(40),
                 CurrentScore(state.currentScore),
                 Gap(120),
