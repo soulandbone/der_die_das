@@ -28,7 +28,7 @@ class QuizProgress extends QuestionState {
     this.currentScore = 0,
     this.currentIndex = 0,
     this.totalCorrect = 0,
-    this.remainingTime = 30,
+    this.remainingTime = 0,
     required this.questions,
   });
 

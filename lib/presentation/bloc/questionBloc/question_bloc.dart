@@ -16,20 +16,22 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
   List<Question>? savedQuestions;
 
-  List<Question>? savedQuestions10;
+  //List<Question>? savedQuestions10;
 
   int? timeLeft;
   Timer? timer;
 
   void startTimer(int initialTime) {
-    releaseTimer();
+    if (timer != null) {
+      releaseTimer();
+    }
 
     timeLeft = initialTime;
-    releaseTimer();
-    timer = Timer.periodic(Duration(seconds: 1), (_) => substractTime());
+
+    timer = Timer.periodic(Duration(seconds: 1), (_) => subtractTime());
   }
 
-  void substractTime() {
+  void subtractTime() {
     final currentState = state as QuizProgress;
     if (timeLeft! > 0) {
       timeLeft = timeLeft! - 1;
@@ -47,7 +49,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
   void releaseTimer() {
     timer!.cancel();
-  } //so we dont have to fetch the questions from the server later
+  }
 
   QuestionBloc(this.getQuestions, this.checkAnswer, this.updateScore)
     : super(QuestionsLoading()) {
@@ -62,13 +64,15 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   ) async {
     emit(QuestionsLoading());
     try {
-      final questions = await getQuestions.call();
+      final questions =
+          await getQuestions.call(); // gets the questions from the server.
       savedQuestions = questions; //caching the questions
       questions.shuffle();
+
       final questions10 = questions.sublist(0, 10);
-      savedQuestions10 = questions10;
-      emit(QuizProgress(questions: questions10, remainingTime: 45));
+      //savedQuestions10 = questions10;
       startTimer(45);
+      emit(QuizProgress(questions: savedQuestions!, remainingTime: 45));
     } catch (e) {
       emit(QuestionsError(e.toString()));
     }
@@ -93,11 +97,11 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     );
     totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
 
-    if (currentIndex == 9) {
+    if (currentIndex == savedQuestions!.length - 1) {
       emit(
         QuizFinished(
           correctQuestions: totalCorrect,
-          totalQuestions: savedQuestions10!.length,
+          totalQuestions: savedQuestions!.length,
         ),
       );
     } else {
@@ -117,7 +121,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     var questions = savedQuestions;
     if (savedQuestions != null && savedQuestions!.isNotEmpty) {
       questions!.shuffle();
-      emit(QuizProgress(questions: questions));
+      startTimer(45);
+      emit(QuizProgress(questions: questions, remainingTime: 45));
     }
   }
 }
