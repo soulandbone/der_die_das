@@ -8,9 +8,11 @@ class CircleTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(400, 400),
-      painter: MyPainter(pctOfTimeLeft: pctOfTimeLeft),
+    return Center(
+      child: CustomPaint(
+        size: Size(180, 180),
+        painter: MyPainter(pctOfTimeLeft: pctOfTimeLeft),
+      ),
     );
   }
 }
