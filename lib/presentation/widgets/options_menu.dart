@@ -1,6 +1,23 @@
 import 'package:der_die_das/presentation/widgets/optionMenuItem/option_menu_item.dart';
 import 'package:flutter/material.dart';
 
+const List<String> texts = [
+  'Normal 10',
+  "Normal 50",
+  'Normal 100',
+  'Timed 0:30',
+  'Timed 1:00',
+  'Timed 2:00',
+];
+const List<Color> colors = [
+  Colors.blue,
+  Colors.blueAccent,
+  Colors.blueGrey,
+  Colors.amber,
+  Colors.amberAccent,
+  Colors.orangeAccent,
+];
+
 class OptionMenu extends StatelessWidget {
   const OptionMenu({super.key});
 
@@ -10,9 +27,9 @@ class OptionMenu extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
       ),
-      itemCount: 7,
+      itemCount: 6,
       itemBuilder: (context, index) {
-        return OptionMenuItem(color: Colors.amber);
+        return OptionMenuItem(text: texts[index], color: colors[index]);
       },
     );
   }
