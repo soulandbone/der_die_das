@@ -15,8 +15,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   final UpdateScore updateScore;
 
   List<Question>? savedQuestions;
-
-  //List<Question>? savedQuestions10;
+  List<Question>? questionsToUse;
 
   int? timeLeft;
   Timer? timer;
@@ -32,7 +31,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   }
 
   void subtractTime() {
-    final currentState = state as QuizProgress;
+    final currentState = state as QuizInProgress;
     if (timeLeft! > 0) {
       timeLeft = timeLeft! - 1;
       emit(currentState.copyWith(remainingTime: timeLeft));
@@ -40,7 +39,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       releaseTimer();
       emit(
         QuizFinished(
-          totalQuestions: currentState.questions.length,
+          quizType: currentState.quizType,
+          totalQuestions: questionsToUse!.length,
           correctQuestions: currentState.totalCorrect,
         ),
       );
@@ -56,6 +56,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     on<LoadQuestions>(loadQuestions);
     on<AnswerConfirmed>(answerConfirmed);
     on<ResetQuiz>(resetQuiz);
+    on<StartQuiz>(startQuiz);
+    on<StartQuizWithOptions>(startQuizWithOptions);
   }
 
   FutureOr<void> loadQuestions(
@@ -69,10 +71,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       savedQuestions = questions; //caching the questions
       questions.shuffle();
 
-      final questions10 = questions.sublist(0, 10);
-      //savedQuestions10 = questions10;
-      startTimer(45);
-      emit(QuizProgress(questions: savedQuestions!, remainingTime: 45));
+      emit(QuestionsLoaded(questions: savedQuestions!));
     } catch (e) {
       emit(QuestionsError(e.toString()));
     }
@@ -82,7 +81,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     AnswerConfirmed event,
     Emitter<QuestionState> emit,
   ) async {
-    final quizProgressState = (state as QuizProgress);
+    final quizProgressState = (state as QuizInProgress);
     final questions = quizProgressState.questions;
     var currentIndex = quizProgressState.currentIndex;
     var currentScore = quizProgressState.currentScore;
@@ -97,21 +96,25 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     );
     totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
 
-    if (currentIndex == savedQuestions!.length - 1) {
+    if (currentIndex == questionsToUse!.length - 1) {
       emit(
         QuizFinished(
+          quizType: quizProgressState.quizType,
           correctQuestions: totalCorrect,
-          totalQuestions: savedQuestions!.length,
+          totalQuestions: questionsToUse!.length,
         ),
       );
     } else {
       emit(
-        QuizProgress(
+        QuizInProgress(
+          quizType: quizProgressState.quizType,
           questions: questions,
+        ).copyWith(
           currentIndex: currentIndex + 1,
-          currentScore: score,
           totalCorrect: totalCorrect,
-          remainingTime: timeLeft!,
+          currentScore: score,
+          remainingTime: timeLeft,
+          startingTime: quizProgressState.startingTime,
         ),
       );
     }
@@ -122,7 +125,61 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     if (savedQuestions != null && savedQuestions!.isNotEmpty) {
       questions!.shuffle();
       startTimer(45);
-      emit(QuizProgress(questions: questions, remainingTime: 45));
+      emit(
+        QuizInProgress(
+          quizType: TypeOfQuiz.timed,
+          questions: questions,
+          remainingTime: 45,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> startQuiz(StartQuiz event, Emitter<QuestionState> emit) {
+    var questions = savedQuestions;
+    if (savedQuestions != null && savedQuestions!.isNotEmpty) {
+      questions!.shuffle();
+      startTimer(45);
+      emit(
+        QuizInProgress(
+          quizType: TypeOfQuiz.timed,
+          questions: questions,
+          remainingTime: 45,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> startQuizWithOptions(
+    StartQuizWithOptions event,
+    Emitter<QuestionState> emit,
+  ) {
+    var numberOfquestions = event.numberOfQuestions;
+
+    if (numberOfquestions != null) {
+      questionsToUse = savedQuestions!.sublist(0, numberOfquestions);
+    } else {
+      questionsToUse = savedQuestions!;
+    }
+
+    int? totalTime = 0;
+    if (event.time != null) {
+      totalTime = event.time!;
+      //  print('Total time is $totalTime');
+    } else {
+      totalTime = null;
+    }
+
+    emit(
+      QuizInProgress(
+        quizType: event.quizType,
+        questions: questionsToUse!,
+        remainingTime: totalTime,
+        startingTime: totalTime,
+      ),
+    );
+    if (totalTime != null) {
+      startTimer(totalTime);
     }
   }
 }

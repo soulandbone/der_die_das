@@ -1,5 +1,7 @@
 part of 'question_bloc.dart';
 
+enum TypeOfQuiz { timed, untimed }
+
 abstract class QuestionState {}
 
 final class QuestionInitial extends QuestionState {}
@@ -18,39 +20,56 @@ class QuestionsError extends QuestionState {
 }
 
 class QuizFinished extends QuestionState {
-  QuizFinished({required this.totalQuestions, required this.correctQuestions});
+  QuizFinished({
+    required this.totalQuestions,
+    required this.correctQuestions,
+    required this.quizType,
+  });
   final int totalQuestions;
   final int correctQuestions;
+  final TypeOfQuiz quizType;
 }
 
-class QuizProgress extends QuestionState {
-  QuizProgress({
+class QuizInProgress extends QuestionState {
+  QuizInProgress({
+    required this.quizType,
+    this.numberOfQuestions,
     this.currentScore = 0,
     this.currentIndex = 0,
     this.totalCorrect = 0,
-    this.remainingTime = 0,
+    this.remainingTime,
     required this.questions,
+    this.startingTime,
   });
 
   final List<Question> questions;
   final int currentScore;
   final int currentIndex;
   final int totalCorrect;
-  final int remainingTime;
+  final int? remainingTime;
+  final int? startingTime;
+  final int? numberOfQuestions;
+  final TypeOfQuiz quizType;
 
-  QuizProgress copyWith({
+  QuizInProgress copyWith({
     List<Question>? questions,
     int? currentScore,
     int? currentIndex,
     int? totalCorrect,
     int? remainingTime,
+    int? numberOfQuestions,
+    int? startingTime,
+    TypeOfQuiz? quizType,
   }) {
-    return QuizProgress(
+    return QuizInProgress(
       questions: questions ?? this.questions,
       currentScore: currentScore ?? this.currentScore,
       currentIndex: currentIndex ?? this.currentIndex,
       totalCorrect: totalCorrect ?? this.totalCorrect,
       remainingTime: remainingTime ?? this.remainingTime,
+      quizType: quizType ?? this.quizType,
+      numberOfQuestions: numberOfQuestions ?? this.numberOfQuestions,
+      startingTime: startingTime ?? this.startingTime,
     );
   }
 }

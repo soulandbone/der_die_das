@@ -1,6 +1,9 @@
+import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
+import 'package:der_die_das/presentation/widgets/drawer/main_drawer.dart';
 import 'package:der_die_das/presentation/widgets/options_menu.dart';
 import 'package:der_die_das/presentation/widgets/welcome_banner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -10,8 +13,22 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Der,Die,Das')),
-      body: Column(
-        children: [WelcomeBanner(), Gap(40), Expanded(child: OptionMenu())],
+      drawer: MainDrawer(),
+      body: BlocBuilder<QuestionBloc, QuestionState>(
+        builder: (context, state) {
+          if (state is QuestionsLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is QuestionsLoaded) {
+            return Column(
+              children: [
+                WelcomeBanner(),
+                Gap(40),
+                Expanded(child: OptionMenu()),
+              ],
+            );
+          }
+          return SizedBox();
+        },
       ),
     );
   }

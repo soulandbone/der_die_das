@@ -10,3 +10,16 @@ class AnswerConfirmed extends QuestionEvent {
 }
 
 class ResetQuiz extends QuestionEvent {}
+
+class StartQuiz extends QuestionEvent {}
+
+class StartQuizWithOptions extends QuestionEvent {
+  StartQuizWithOptions({
+    this.numberOfQuestions,
+    this.time,
+    required this.quizType,
+  });
+  final int? numberOfQuestions;
+  final int? time;
+  final TypeOfQuiz quizType;
+}

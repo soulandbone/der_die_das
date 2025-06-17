@@ -1,5 +1,7 @@
+import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/widgets/row_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Summary extends StatelessWidget {
   const Summary({
@@ -13,6 +15,8 @@ class Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final questionsState = context.watch<QuestionBloc>().state as QuizFinished;
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 80),
       child: Container(
@@ -20,11 +24,13 @@ class Summary extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            RowSummary(
-              firstTextColor: Theme.of(context).colorScheme.primary,
-              text: 'Questions',
-              number: totalQuestions.toStringAsFixed(0),
-            ),
+            questionsState.quizType == TypeOfQuiz.timed
+                ? SizedBox()
+                : RowSummary(
+                  firstTextColor: Theme.of(context).colorScheme.primary,
+                  text: 'Questions',
+                  number: totalQuestions.toStringAsFixed(0),
+                ),
             RowSummary(
               firstTextColor: Theme.of(context).colorScheme.secondary,
               text: 'Correct Questions',

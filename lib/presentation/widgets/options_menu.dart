@@ -1,10 +1,12 @@
+import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/widgets/optionMenuItem/option_menu_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 const List<String> texts = [
   'Normal 10',
-  "Normal 50",
-  'Normal 100',
+  "Normal 20",
+  'Normal 30',
   'Timed 0:30',
   'Timed 1:00',
   'Timed 2:00',
@@ -23,13 +25,18 @@ class OptionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final quizBloc = context.read<QuestionBloc>();
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
       ),
       itemCount: 6,
       itemBuilder: (context, index) {
-        return OptionMenuItem(text: texts[index], color: colors[index]);
+        return OptionMenuItem(
+          index: index,
+          text: texts[index],
+          color: colors[index],
+        );
       },
     );
   }
