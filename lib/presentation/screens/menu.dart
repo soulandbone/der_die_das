@@ -1,6 +1,6 @@
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/widgets/drawer/main_drawer.dart';
-import 'package:der_die_das/presentation/widgets/options_menu.dart';
+import 'package:der_die_das/presentation/widgets/mainMenu/main_menu_toggle.dart';
 import 'package:der_die_das/presentation/widgets/welcome_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +23,7 @@ class MenuScreen extends StatelessWidget {
               children: [
                 WelcomeBanner(),
                 Gap(40),
-                Expanded(child: OptionMenu()),
+                MainMenuToggle(labels: ['Option1', 'Option2', 'Option3']),
               ],
             );
           }
