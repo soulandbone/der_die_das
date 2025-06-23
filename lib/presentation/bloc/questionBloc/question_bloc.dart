@@ -42,7 +42,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       emit(
         QuizFinished(
           quizType: currentState.quizType!,
-          totalQuestions: questionsToUse!.length,
+          totalQuestions: currentState.currentIndex!,
           correctQuestions: currentState.totalCorrect!,
         ),
       );
