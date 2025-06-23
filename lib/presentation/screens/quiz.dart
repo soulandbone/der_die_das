@@ -31,7 +31,7 @@ class QuizScreen extends StatelessWidget {
 
             return Column(
               children: [
-                CurrentScore(state.currentScore),
+                CurrentScore(state.currentScore!),
                 Gap(80),
                 isTimed
                     ? FullTimer(
@@ -41,7 +41,7 @@ class QuizScreen extends StatelessWidget {
                     : SizedBox(),
                 Gap(50),
                 CardQuestion(
-                  question: state.questions[state.currentIndex].word,
+                  question: state.questions![state.currentIndex!].word,
                 ),
               ],
             );

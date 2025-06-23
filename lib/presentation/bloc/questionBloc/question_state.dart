@@ -32,24 +32,24 @@ class QuizFinished extends QuestionState {
 
 class QuizInProgress extends QuestionState {
   QuizInProgress({
-    required this.quizType,
-    this.numberOfQuestions,
-    this.currentScore = 0,
-    this.currentIndex = 0,
-    this.totalCorrect = 0,
+    this.questions,
+    this.currentScore,
+    this.currentIndex,
+    this.totalCorrect,
     this.remainingTime,
-    required this.questions,
     this.startingTime,
+    this.numberOfQuestions,
+    this.quizType,
   });
 
-  final List<Question> questions;
-  final int currentScore;
-  final int currentIndex;
-  final int totalCorrect;
+  final List<Question>? questions;
+  final int? currentScore;
+  final int? currentIndex;
+  final int? totalCorrect;
   final int? remainingTime;
   final int? startingTime;
   final int? numberOfQuestions;
-  final TypeOfQuiz quizType;
+  final TypeOfQuiz? quizType;
 
   QuizInProgress copyWith({
     List<Question>? questions,
@@ -57,8 +57,8 @@ class QuizInProgress extends QuestionState {
     int? currentIndex,
     int? totalCorrect,
     int? remainingTime,
-    int? numberOfQuestions,
     int? startingTime,
+    int? numberOfQuestions,
     TypeOfQuiz? quizType,
   }) {
     return QuizInProgress(
@@ -67,9 +67,9 @@ class QuizInProgress extends QuestionState {
       currentIndex: currentIndex ?? this.currentIndex,
       totalCorrect: totalCorrect ?? this.totalCorrect,
       remainingTime: remainingTime ?? this.remainingTime,
+      startingTime: startingTime ?? this.startingTime,
       quizType: quizType ?? this.quizType,
       numberOfQuestions: numberOfQuestions ?? this.numberOfQuestions,
-      startingTime: startingTime ?? this.startingTime,
     );
   }
 }

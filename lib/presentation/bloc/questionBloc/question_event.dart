@@ -9,7 +9,9 @@ class AnswerConfirmed extends QuestionEvent {
   final String answer;
 }
 
-class ResetQuiz extends QuestionEvent {}
+class ResetQuiz extends QuestionEvent {
+  ResetQuiz();
+}
 
 class StartQuiz extends QuestionEvent {}
 

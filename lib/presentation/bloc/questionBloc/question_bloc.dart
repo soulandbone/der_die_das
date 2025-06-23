@@ -17,6 +17,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   List<Question>? savedQuestions;
   List<Question>? questionsToUse;
 
+  Map<String, dynamic>? initialValues;
+
   int? timeLeft;
   Timer? timer;
 
@@ -39,9 +41,9 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       releaseTimer();
       emit(
         QuizFinished(
-          quizType: currentState.quizType,
+          quizType: currentState.quizType!,
           totalQuestions: questionsToUse!.length,
-          correctQuestions: currentState.totalCorrect,
+          correctQuestions: currentState.totalCorrect!,
         ),
       );
     }
@@ -56,7 +58,6 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     on<LoadQuestions>(loadQuestions);
     on<AnswerConfirmed>(answerConfirmed);
     on<ResetQuiz>(resetQuiz);
-    on<StartQuiz>(startQuiz);
     on<StartQuizWithOptions>(startQuizWithOptions);
   }
 
@@ -88,65 +89,51 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     var totalCorrect = quizProgressState.totalCorrect;
     var correctAnswer = checkAnswer(
       answer: event.answer,
-      correctAnswer: questions[currentIndex].correctAnswer,
+      correctAnswer: questions![currentIndex!].correctAnswer,
     );
     var score = updateScore(
       isCorrect: correctAnswer,
-      currentScore: currentScore,
+      currentScore: currentScore!,
     );
-    totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
+    if (totalCorrect != null) {
+      totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
+    }
 
     if (currentIndex == questionsToUse!.length - 1) {
       emit(
         QuizFinished(
-          quizType: quizProgressState.quizType,
-          correctQuestions: totalCorrect,
+          quizType: quizProgressState.quizType!,
+          correctQuestions: totalCorrect!,
           totalQuestions: questionsToUse!.length,
         ),
       );
     } else {
       emit(
-        QuizInProgress(
-          quizType: quizProgressState.quizType,
-          questions: questions,
-        ).copyWith(
+        quizProgressState.copyWith(
           currentIndex: currentIndex + 1,
           totalCorrect: totalCorrect,
           currentScore: score,
           remainingTime: timeLeft,
-          startingTime: quizProgressState.startingTime,
         ),
       );
     }
   }
 
   FutureOr<void> resetQuiz(ResetQuiz event, Emitter<QuestionState> emit) {
-    var questions = savedQuestions;
-    if (savedQuestions != null && savedQuestions!.isNotEmpty) {
-      questions!.shuffle();
-      startTimer(45);
-      emit(
-        QuizInProgress(
-          quizType: TypeOfQuiz.timed,
-          questions: questions,
-          remainingTime: 45,
-        ),
-      );
-    }
-  }
-
-  FutureOr<void> startQuiz(StartQuiz event, Emitter<QuestionState> emit) {
-    var questions = savedQuestions;
-    if (savedQuestions != null && savedQuestions!.isNotEmpty) {
-      questions!.shuffle();
-      startTimer(45);
-      emit(
-        QuizInProgress(
-          quizType: TypeOfQuiz.timed,
-          questions: questions,
-          remainingTime: 45,
-        ),
-      );
+    emit(
+      QuizInProgress(
+        numberOfQuestions: initialValues!['numberOfQuestions'],
+        quizType: initialValues!['quizType'],
+        startingTime: initialValues!['time'],
+        currentScore: 0,
+        currentIndex: 0,
+        questions: questionsToUse,
+        totalCorrect: 0,
+        remainingTime: initialValues!['time'],
+      ),
+    );
+    if (initialValues!['time'] != null) {
+      startTimer(initialValues!['time']);
     }
   }
 
@@ -165,19 +152,27 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     int? totalTime = 0;
     if (event.time != null) {
       totalTime = event.time!;
-      //  print('Total time is $totalTime');
     } else {
       totalTime = null;
     }
 
     emit(
       QuizInProgress(
-        quizType: event.quizType,
-        questions: questionsToUse!,
+        questions: questionsToUse,
+        currentIndex: 0,
+        currentScore: 0,
+        totalCorrect: 0,
         remainingTime: totalTime,
         startingTime: totalTime,
+        quizType: event.quizType,
+        numberOfQuestions: numberOfquestions,
       ),
     );
+    initialValues = {
+      'quizType': event.quizType,
+      'numberOfQuestions': event.numberOfQuestions,
+      'time': event.time,
+    };
     if (totalTime != null) {
       startTimer(totalTime);
     }
