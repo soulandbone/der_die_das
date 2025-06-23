@@ -17,13 +17,14 @@ class _MainMenuToggleState extends State<MainMenuToggle> {
     } else {
       return false;
     }
-  }); //widgets.map((e) => false).toList();
+  });
 
   @override
   Widget build(BuildContext context) {
     return ToggleButtons(
       borderRadius: BorderRadius.circular(15),
       fillColor: Colors.red,
+      constraints: BoxConstraints(minHeight: 42, minWidth: 76),
       borderColor: Colors.blue,
       selectedColor: Colors.white,
       onPressed: (index) {
