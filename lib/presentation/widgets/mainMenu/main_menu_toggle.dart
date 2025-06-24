@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MainMenuToggle extends StatefulWidget {
-  const MainMenuToggle({required this.labels, super.key});
+  const MainMenuToggle({
+    required this.function,
+    required this.labels,
+    super.key,
+  });
 
   final List<String> labels;
+  final Function(int) function;
 
   @override
   State<MainMenuToggle> createState() => _MainMenuToggleState();
@@ -32,6 +37,8 @@ class _MainMenuToggleState extends State<MainMenuToggle> {
           for (int i = 0; i < widgets.length; i++) {
             isSelected[i] = i == index;
           }
+
+          widget.function(index);
         });
       },
       isSelected: isSelected,
