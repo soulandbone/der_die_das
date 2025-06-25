@@ -9,7 +9,7 @@ class CustomMenuToggle extends StatelessWidget {
     super.key,
   });
 
-  final List<String> options;
+  final List<int> options;
   final int selectedIndex;
   final ValueChanged<int> onChanged;
 
@@ -35,7 +35,10 @@ class CustomMenuToggle extends StatelessWidget {
             childDelegate: ListWheelChildListDelegate(
               children:
                   options
-                      .map((e) => Center(child: ListwheelItem(text: (e))))
+                      .map(
+                        (e) =>
+                            Center(child: ListwheelItem(text: (e.toString()))),
+                      )
                       .toList(),
             ),
           ),

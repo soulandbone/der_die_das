@@ -156,6 +156,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       totalTime = null;
     }
 
+    print('event is emmited');
+
     emit(
       QuizInProgress(
         questions: questionsToUse,

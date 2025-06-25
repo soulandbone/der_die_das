@@ -1,4 +1,5 @@
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
+import 'package:der_die_das/presentation/screens/quiz.dart';
 import 'package:der_die_das/presentation/widgets/drawer/main_drawer.dart';
 import 'package:der_die_das/presentation/widgets/mainMenu/ListWheel/custom_menu_toggle.dart';
 import 'package:der_die_das/presentation/widgets/mainMenu/main_menu_toggle.dart';
@@ -22,7 +23,16 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> options = ['1', '2', '3'];
+    final List<int> timedOptions = [30, 60, 120];
+    final List<int> untimedOptions = [10, 25, 50];
+
+    TypeOfQuiz typeOfQuiz = isTimed ? TypeOfQuiz.timed : TypeOfQuiz.untimed;
+    int time = timedOptions[timedSelection];
+    int numberOfQuestions = untimedOptions[untimedSelection];
+
+    final List<int> options = List.generate(100, (int index) => index + 1);
+
+    final quizBloc = context.read<QuestionBloc>();
 
     return Scaffold(
       appBar: AppBar(title: Text('Der,Die,Das')),
@@ -40,7 +50,11 @@ class _MenuScreenState extends State<MenuScreen> {
                   labels: ['Timed', 'Untimed'],
                   function: (index) {
                     setState(() {
-                      isTimed = index == 0;
+                      isTimed =
+                          index ==
+                          0; //resets the values for timedSelection and untimedSelection each time that it is changed
+                      timedSelection = 0;
+                      untimedSelection = 0;
                     });
                   },
                 ),
@@ -70,15 +84,33 @@ class _MenuScreenState extends State<MenuScreen> {
                       },
                     ),
                 Gap(15),
-                CustomMenuToggle(
-                  options: options,
-                  selectedIndex: customSelectedIndex,
-                  onChanged: (int index) {
-                    setState(() {
-                      customSelectedIndex = index;
-                    });
-                    print('Selected index is $index');
+                (timedSelection == 3 || untimedSelection == 3)
+                    ? CustomMenuToggle(
+                      options: options,
+                      selectedIndex: customSelectedIndex,
+                      onChanged: (int index) {
+                        setState(() {
+                          customSelectedIndex = index;
+                        });
+                        print('Selected index is $index');
+                      },
+                    )
+                    : Gap(200),
+                Gap(45),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => QuizScreen()),
+                    );
+                    quizBloc.add(
+                      StartQuizWithOptions(
+                        quizType: TypeOfQuiz.timed,
+                        time: 30,
+                        // numberOfQuestions: !isTimed ? numberOfQuestions : null,
+                      ),
+                    ); // seguir desde aqui
                   },
+                  child: Text('Start Quiz', style: TextStyle(fontSize: 22)),
                 ),
               ],
             );
