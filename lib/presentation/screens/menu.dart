@@ -105,8 +105,8 @@ class _MenuScreenState extends State<MenuScreen> {
                     quizBloc.add(
                       StartQuizWithOptions(
                         quizType: TypeOfQuiz.timed,
-                        time: 30,
-                        // numberOfQuestions: !isTimed ? numberOfQuestions : null,
+                        time: isTimed ? time : null,
+                        numberOfQuestions: !isTimed ? numberOfQuestions : null,
                       ),
                     ); // seguir desde aqui
                   },
