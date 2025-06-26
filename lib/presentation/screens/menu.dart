@@ -23,8 +23,8 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<int> timedOptions = [30, 60, 120];
-    final List<int> untimedOptions = [10, 25, 50];
+    final List<int> timedOptions = [30, 60, 120, 0]; //0 for Custom
+    final List<int> untimedOptions = [10, 25, 50, 0]; //0 for custom
 
     TypeOfQuiz typeOfQuiz = isTimed ? TypeOfQuiz.timed : TypeOfQuiz.untimed;
     int time = timedOptions[timedSelection];
@@ -55,6 +55,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           0; //resets the values for timedSelection and untimedSelection each time that it is changed
                       timedSelection = 0;
                       untimedSelection = 0;
+                      print('Quiz isTimed is set to $isTimed');
                     });
                   },
                 ),
@@ -79,7 +80,11 @@ class _MenuScreenState extends State<MenuScreen> {
                       ],
                       function: (int index) {
                         setState(() {
-                          untimedSelection = index;
+                          if (isTimed) {
+                            timedSelection = index;
+                          } else {
+                            untimedSelection = index;
+                          }
                         });
                       },
                     ),
@@ -90,7 +95,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       selectedIndex: customSelectedIndex,
                       onChanged: (int index) {
                         setState(() {
-                          customSelectedIndex = index;
+                          customSelectedIndex = index + 1;
                         });
                         print('Selected index is $index');
                       },
@@ -104,9 +109,19 @@ class _MenuScreenState extends State<MenuScreen> {
                     );
                     quizBloc.add(
                       StartQuizWithOptions(
-                        quizType: TypeOfQuiz.timed,
-                        time: isTimed ? time : null,
-                        numberOfQuestions: !isTimed ? numberOfQuestions : null,
+                        quizType: typeOfQuiz,
+                        time:
+                            (isTimed && timedSelection == 3)
+                                ? customSelectedIndex
+                                : isTimed
+                                ? time
+                                : null,
+                        numberOfQuestions:
+                            (!isTimed && untimedSelection == 3)
+                                ? customSelectedIndex
+                                : !isTimed
+                                ? numberOfQuestions
+                                : null,
                       ),
                     ); // seguir desde aqui
                   },

@@ -27,17 +27,21 @@ class QuizScreen extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           } else if (state is QuizInProgress) {
             var isTimed = state.quizType == TypeOfQuiz.timed;
-            print('StartingTime time is ${state.startingTime}');
+            var timeLeft = 0;
+            var startingTime = 0;
+            if (isTimed &&
+                state.remainingTime != null &&
+                state.startingTime != null) {
+              timeLeft = state.remainingTime!;
+              startingTime = state.startingTime!;
+            }
 
             return Column(
               children: [
                 CurrentScore(state.currentScore!),
                 Gap(80),
                 isTimed
-                    ? FullTimer(
-                      timeLeft: state.remainingTime!,
-                      startingTime: state.startingTime!,
-                    )
+                    ? FullTimer(timeLeft: timeLeft, startingTime: startingTime)
                     : SizedBox(),
                 Gap(50),
                 CardQuestion(
