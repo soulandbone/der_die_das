@@ -1,6 +1,7 @@
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/bloc/themeBloc/bloc/theme_bloc.dart';
 import 'package:der_die_das/presentation/widgets/cardQuestion/options_text.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -23,8 +24,8 @@ class _CardQuestionState extends State<CardQuestion> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
       color: Theme.of(context).colorScheme.primaryContainer,
+      elevation: 8,
       margin: EdgeInsets.symmetric(horizontal: 15),
       shape: RoundedRectangleBorder(
         side: BorderSide(

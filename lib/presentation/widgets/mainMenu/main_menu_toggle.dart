@@ -29,7 +29,7 @@ class _MainMenuToggleState extends State<MainMenuToggle> {
     return ToggleButtons(
       borderRadius: BorderRadius.circular(15),
       fillColor: Colors.red,
-      constraints: BoxConstraints(minHeight: 42, minWidth: 76),
+      constraints: BoxConstraints(minHeight: 42, minWidth: 84),
       borderColor: Colors.blue,
       selectedColor: Colors.white,
       onPressed: (index) {

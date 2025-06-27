@@ -72,12 +72,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     )
                     : MainMenuToggle(
                       key: ValueKey('untimed'),
-                      labels: [
-                        '10 questions',
-                        '25 questions',
-                        '50 questions',
-                        'Custom',
-                      ],
+                      labels: ['10 Q#s', '25 Q#s', '50 Q#s', 'Custom'],
                       function: (int index) {
                         setState(() {
                           if (isTimed) {

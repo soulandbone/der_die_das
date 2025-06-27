@@ -1,6 +1,5 @@
-import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeBanner extends StatelessWidget {
@@ -11,12 +10,12 @@ class WelcomeBanner extends StatelessWidget {
     return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(20),
           child: Container(
             height: 150,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.amber, Colors.black54]),
+              color: Theme.of(context).colorScheme.primaryContainer,
             ),
             // padding: EdgeInsets.all(10)
           ),

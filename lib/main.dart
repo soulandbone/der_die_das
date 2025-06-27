@@ -5,10 +5,11 @@ import 'package:der_die_das/firebase_options.dart';
 import 'package:der_die_das/injection_container.dart';
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/bloc/themeBloc/bloc/theme_bloc.dart';
-import 'package:der_die_das/presentation/screens/quiz.dart';
+
 import 'package:der_die_das/presentation/screens/menu.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -51,8 +52,9 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme:
             (currentState as Settings).isDark
-                ? ThemeData.dark()
-                : ThemeData.light(),
+                ? FlexThemeData.dark(scheme: FlexScheme.flutterDash)
+                : FlexThemeData.light(scheme: FlexScheme.flutterDash),
+        //: FlexThemeData.light(),
         home: MenuScreen(), //HomeScreen(),
       ),
     );
