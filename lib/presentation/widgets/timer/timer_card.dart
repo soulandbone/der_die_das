@@ -10,7 +10,7 @@ class TimerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        width: 80,
+        width: 120,
         padding: const EdgeInsets.all(8),
         child: Center(
           child: Text(

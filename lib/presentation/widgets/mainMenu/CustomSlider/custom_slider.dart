@@ -16,7 +16,12 @@ class CustomSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Slider(value: sliderValue, onChanged: onChanged, min: 10, max: 50),
+        Slider(
+          value: sliderValue,
+          onChanged: onChanged,
+          min: 20,
+          max: isTimed ? 180 : 150,
+        ),
         Text(
           isTimed
               ? '${sliderValue.toStringAsFixed(0)} secs '

@@ -32,7 +32,7 @@ class _CardQuestionState extends State<CardQuestion> {
           color: Theme.of(context).colorScheme.onPrimary,
           width: 4,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(45),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -52,7 +52,7 @@ class _CardQuestionState extends State<CardQuestion> {
                       textStyle: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.tertiary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),

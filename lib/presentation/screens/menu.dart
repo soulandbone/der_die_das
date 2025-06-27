@@ -19,7 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
   bool isTimed = true;
   int timedSelection = 0;
   int untimedSelection = 0;
-  int customSelectedValue = 10;
+  int customSelectedValue = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +30,13 @@ class _MenuScreenState extends State<MenuScreen> {
     int time = timedOptions[timedSelection];
     int numberOfQuestions = untimedOptions[untimedSelection];
 
-    final List<int> options = List.generate(100, (int index) => index + 1);
-
     final quizBloc = context.read<QuestionBloc>();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Der,Die,Das')),
+      appBar: AppBar(
+        title: Text('Der,Die,Das'),
+        //backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      ),
       drawer: MainDrawer(),
       body: BlocBuilder<QuestionBloc, QuestionState>(
         builder: (context, state) {
@@ -55,7 +56,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           0; //resets the values for timedSelection and untimedSelection each time that it is changed
                       timedSelection = 0;
                       untimedSelection = 0;
-                      print('Quiz isTimed is set to $isTimed');
+                      //print('Quiz isTimed is set to $isTimed');
                     });
                   },
                 ),
@@ -75,11 +76,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       labels: ['10 Q#s', '25 Q#s', '50 Q#s', 'Custom'],
                       function: (int index) {
                         setState(() {
-                          if (isTimed) {
-                            timedSelection = index;
-                          } else {
-                            untimedSelection = index;
-                          }
+                          // if (isTimed) {
+                          //   timedSelection = index;
+                          // } else {
+                          //   untimedSelection = index;
+                          // }
+                          untimedSelection = index;
                         });
                       },
                     ),
@@ -95,31 +97,34 @@ class _MenuScreenState extends State<MenuScreen> {
                       },
                     )
                     : Gap(200),
-                Gap(45),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => QuizScreen()),
-                    );
-                    quizBloc.add(
-                      StartQuizWithOptions(
-                        quizType: typeOfQuiz,
-                        time:
-                            (isTimed && timedSelection == 3)
-                                ? customSelectedValue
-                                : isTimed
-                                ? time
-                                : null,
-                        numberOfQuestions:
-                            (!isTimed && untimedSelection == 3)
-                                ? customSelectedValue
-                                : !isTimed
-                                ? numberOfQuestions
-                                : null,
-                      ),
-                    ); // seguir desde aqui
-                  },
-                  child: Text('Start Quiz', style: TextStyle(fontSize: 22)),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 220),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => QuizScreen()),
+                      );
+                      quizBloc.add(
+                        StartQuizWithOptions(
+                          quizType: typeOfQuiz,
+                          time:
+                              (isTimed && timedSelection == 3)
+                                  ? customSelectedValue
+                                  : isTimed
+                                  ? time
+                                  : null,
+                          numberOfQuestions:
+                              (!isTimed && untimedSelection == 3)
+                                  ? customSelectedValue
+                                  : !isTimed
+                                  ? numberOfQuestions
+                                  : null,
+                        ),
+                      ); // seguir desde aqui
+                    },
+                    child: Text('Start Quiz', style: TextStyle(fontSize: 22)),
+                  ),
                 ),
               ],
             );

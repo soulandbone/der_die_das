@@ -13,6 +13,8 @@ class ResetQuiz extends QuestionEvent {
   ResetQuiz();
 }
 
+class ReturnToMainMenu extends QuestionEvent {}
+
 class StartQuiz extends QuestionEvent {}
 
 class StartQuizWithOptions extends QuestionEvent {

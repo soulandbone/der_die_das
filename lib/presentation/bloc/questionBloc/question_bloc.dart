@@ -59,6 +59,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     on<AnswerConfirmed>(answerConfirmed);
     on<ResetQuiz>(resetQuiz);
     on<StartQuizWithOptions>(startQuizWithOptions);
+    on<ReturnToMainMenu>(returnToMainMenu);
   }
 
   FutureOr<void> loadQuestions(
@@ -178,5 +179,12 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     if (totalTime != null) {
       startTimer(totalTime);
     }
+  }
+
+  FutureOr<void> returnToMainMenu(
+    ReturnToMainMenu event,
+    Emitter<QuestionState> emit,
+  ) {
+    emit(QuestionsLoaded(questions: savedQuestions!));
   }
 }
