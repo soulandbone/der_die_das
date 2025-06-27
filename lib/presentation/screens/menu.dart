@@ -1,7 +1,7 @@
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/screens/quiz.dart';
 import 'package:der_die_das/presentation/widgets/drawer/main_drawer.dart';
-import 'package:der_die_das/presentation/widgets/mainMenu/ListWheel/custom_menu_toggle.dart';
+import 'package:der_die_das/presentation/widgets/mainMenu/CustomSlider/custom_slider.dart';
 import 'package:der_die_das/presentation/widgets/mainMenu/main_menu_toggle.dart';
 import 'package:der_die_das/presentation/widgets/welcome_banner.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
   bool isTimed = true;
   int timedSelection = 0;
   int untimedSelection = 0;
-  int customSelectedIndex = 0;
+  int customSelectedValue = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +85,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                 Gap(15),
                 (timedSelection == 3 || untimedSelection == 3)
-                    ? CustomMenuToggle(
-                      options: options,
-                      selectedIndex: customSelectedIndex,
-                      onChanged: (int index) {
+                    ? CustomSlider(
+                      isTimed: isTimed,
+                      sliderValue: customSelectedValue.toDouble(),
+                      onChanged: (double value) {
                         setState(() {
-                          customSelectedIndex = index + 1;
+                          customSelectedValue = value.toInt();
                         });
-                        print('Selected index is $index');
                       },
                     )
                     : Gap(200),
@@ -107,13 +106,13 @@ class _MenuScreenState extends State<MenuScreen> {
                         quizType: typeOfQuiz,
                         time:
                             (isTimed && timedSelection == 3)
-                                ? customSelectedIndex
+                                ? customSelectedValue
                                 : isTimed
                                 ? time
                                 : null,
                         numberOfQuestions:
                             (!isTimed && untimedSelection == 3)
-                                ? customSelectedIndex
+                                ? customSelectedValue
                                 : !isTimed
                                 ? numberOfQuestions
                                 : null,
