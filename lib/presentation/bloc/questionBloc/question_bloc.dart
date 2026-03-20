@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:der_die_das/domain/contracts/ticker.dart';
 import 'package:der_die_das/domain/entities/question.dart';
 import 'package:der_die_das/domain/usecases/check_answer.dart';
 import 'package:der_die_das/domain/usecases/get_questions.dart';
@@ -10,56 +11,49 @@ part 'question_event.dart';
 part 'question_state.dart';
 
 class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
+  QuestionBloc(
+    this.getQuestions,
+    this.checkAnswer,
+    this.updateScore,
+    this.ticker,
+  ) : super(QuestionsLoading()) {
+    on<LoadQuestions>(loadQuestions);
+    on<AnswerConfirmed>(answerConfirmed);
+    on<ResetQuiz>(resetQuiz);
+    on<StartQuizWithOptions>(startQuizWithOptions);
+    on<ReturnToMainMenu>(returnToMainMenu);
+    on<TimerTick>(timerTick);
+  }
+
   final GetQuestions getQuestions;
   final CheckAnswer checkAnswer;
   final UpdateScore updateScore;
+  final Ticker ticker;
+
+  StreamSubscription? _tickerSub;
 
   List<Question>? savedQuestions;
   List<Question>? questionsToUse;
 
   Map<String, dynamic>? initialValues;
 
-  int? timeLeft;
-  Timer? timer;
-
-  void startTimer(int initialTime) {
-    if (timer != null) {
-      releaseTimer();
-    }
-
-    timeLeft = initialTime;
-
-    timer = Timer.periodic(Duration(seconds: 1), (_) => subtractTime());
+  void startTicker(int seconds) {
+    if (seconds <= 0) return;
+    stopTicker();
+    _tickerSub = ticker.tick(seconds).listen((remaining) {
+      add(TimerTick(remaining));
+    });
   }
 
-  void subtractTime() {
-    final currentState = state as QuizInProgress;
-    if (timeLeft! > 0) {
-      timeLeft = timeLeft! - 1;
-      emit(currentState.copyWith(remainingTime: timeLeft));
-    } else {
-      releaseTimer();
-      emit(
-        QuizFinished(
-          quizType: currentState.quizType!,
-          totalQuestions: currentState.currentIndex!,
-          correctQuestions: currentState.totalCorrect!,
-        ),
-      );
-    }
+  void stopTicker() {
+    _tickerSub?.cancel();
+    _tickerSub = null;
   }
 
-  void releaseTimer() {
-    timer!.cancel();
-  }
-
-  QuestionBloc(this.getQuestions, this.checkAnswer, this.updateScore)
-    : super(QuestionsLoading()) {
-    on<LoadQuestions>(loadQuestions);
-    on<AnswerConfirmed>(answerConfirmed);
-    on<ResetQuiz>(resetQuiz);
-    on<StartQuizWithOptions>(startQuizWithOptions);
-    on<ReturnToMainMenu>(returnToMainMenu);
+  @override
+  Future close() {
+    stopTicker(); // cancel subscription
+    return super.close();
   }
 
   FutureOr<void> loadQuestions(
@@ -69,7 +63,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     emit(QuestionsLoading());
     try {
       final questions =
-          await getQuestions.call(); // gets the questions from the server.
+          await getQuestions(); // gets the questions from the server.
       savedQuestions = questions; //caching the questions
       questions.shuffle();
 
@@ -79,15 +73,36 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     }
   }
 
+  FutureOr<void> timerTick(TimerTick event, Emitter<QuestionState> emit) async {
+    if (state is! QuizInProgress) return;
+    final currentState = state as QuizInProgress;
+    final remainingTime = event.remaining;
+
+    if (remainingTime > 0) {
+      emit(currentState.copyWith(remainingTime: remainingTime));
+    } else {
+      stopTicker(); //time reached zero, quiz has finished
+      emit(
+        QuizFinished(
+          totalQuestions: ((currentState.currentIndex ?? 0)),
+          correctQuestions: currentState.totalCorrect ?? 0,
+          quizType: currentState.quizType!,
+        ),
+      );
+    }
+  }
+
   FutureOr<void> answerConfirmed(
     AnswerConfirmed event,
     Emitter<QuestionState> emit,
   ) async {
-    final quizProgressState = (state as QuizInProgress);
-    final questions = quizProgressState.questions;
-    var currentIndex = quizProgressState.currentIndex;
-    var currentScore = quizProgressState.currentScore;
-    var totalCorrect = quizProgressState.totalCorrect;
+    if (state is! QuizInProgress) return;
+    final currentState = (state as QuizInProgress);
+    final questions = currentState.questions;
+    var currentIndex = currentState.currentIndex;
+    var currentScore = currentState.currentScore;
+    var totalCorrect = currentState.totalCorrect;
+    var remainingTime = currentState.remainingTime;
     var correctAnswer = checkAnswer(
       answer: event.answer,
       correctAnswer: questions![currentIndex!].correctAnswer,
@@ -103,18 +118,18 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     if (currentIndex == questionsToUse!.length - 1) {
       emit(
         QuizFinished(
-          quizType: quizProgressState.quizType!,
+          quizType: currentState.quizType!,
           correctQuestions: totalCorrect!,
           totalQuestions: questionsToUse!.length,
         ),
       );
     } else {
       emit(
-        quizProgressState.copyWith(
+        currentState.copyWith(
           currentIndex: currentIndex + 1,
           totalCorrect: totalCorrect,
           currentScore: score,
-          remainingTime: timeLeft,
+          remainingTime: remainingTime,
         ),
       );
     }
@@ -134,7 +149,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       ),
     );
     if (initialValues!['time'] != null) {
-      startTimer(initialValues!['time']);
+      startTicker(initialValues!['time']);
     }
   }
 
@@ -157,8 +172,6 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       totalTime = null;
     }
 
-    print('event is emmited');
-
     emit(
       QuizInProgress(
         questions: questionsToUse,
@@ -177,7 +190,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       'time': event.time,
     };
     if (totalTime != null) {
-      startTimer(totalTime);
+      startTicker(totalTime);
     }
   }
 

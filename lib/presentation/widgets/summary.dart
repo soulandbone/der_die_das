@@ -15,7 +15,9 @@ class Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final questionsState = context.watch<QuestionBloc>().state as QuizFinished;
+    final questionsState = context.watch<QuestionBloc>().state;
+
+    if (questionsState is! QuizFinished) return const SizedBox.shrink();
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 80),
@@ -39,8 +41,11 @@ class Summary extends StatelessWidget {
             RowSummary(
               firstTextColor: Theme.of(context).colorScheme.tertiary,
               text: '% of completion',
-              number: ((correctQuestions / totalQuestions) * 100)
-                  .toStringAsFixed(2),
+              number:
+                  totalQuestions == 0
+                      ? '0'
+                      : ((correctQuestions / totalQuestions) * 100)
+                          .toStringAsFixed(2),
             ),
           ],
         ),

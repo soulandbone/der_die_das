@@ -1,3 +1,4 @@
+import 'package:der_die_das/data/ticker/real_ticker.dart';
 import 'package:der_die_das/domain/usecases/check_answer.dart';
 import 'package:der_die_das/domain/usecases/get_questions.dart';
 import 'package:der_die_das/domain/usecases/update_score.dart';
@@ -12,7 +13,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,11 +30,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final getIt = GetIt.instance;
-
-    final getQuestions = getIt<GetQuestions>();
-    final checkAnswer = getIt<CheckAnswer>();
-    final updateScore = getIt<UpdateScore>();
+    //  final getIt = GetIt.instance;
 
     final currentState = context.watch<ThemeBloc>().state;
 
@@ -42,9 +38,12 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create:
-              (context) =>
-                  QuestionBloc(getQuestions, checkAnswer, updateScore)
-                    ..add(LoadQuestions()),
+              (context) => QuestionBloc(
+                getIt<GetQuestions>(),
+                getIt<CheckAnswer>(),
+                getIt<UpdateScore>(),
+                getIt<RealTicker>(),
+              )..add(LoadQuestions()),
         ),
       ],
       child: MaterialApp(

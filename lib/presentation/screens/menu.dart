@@ -34,7 +34,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Der,Die,Das'),
+        title: Text(
+          'Der,Die,Das',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryFixed),
+        ),
         //backgroundColor: Theme.of(context).colorScheme.onSecondary,
       ),
       drawer: MainDrawer(),

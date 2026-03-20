@@ -12,7 +12,12 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     on<ToggleShowArticle>(toggleShowArticle);
   }
 
-  FutureOr<void> toggleTheme(ToggleTheme event, Emitter<ThemeState> emit) {
+  FutureOr<void> toggleTheme(
+    ToggleTheme event,
+    Emitter<ThemeState> emit,
+  ) async {
+    if (state is! Settings) return;
+
     final currentState = (state as Settings);
     final isDark = currentState.isDark;
     final showsArticle = currentState.showsArticle;
@@ -23,7 +28,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   FutureOr<void> toggleShowArticle(
     ToggleShowArticle event,
     Emitter<ThemeState> emit,
-  ) {
+  ) async {
+    if (state is! Settings) return;
     final currentState = (state as Settings);
     final isDark = currentState.isDark;
     final showsArticle = currentState.showsArticle;

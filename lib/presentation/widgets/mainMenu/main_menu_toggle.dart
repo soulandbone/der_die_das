@@ -28,9 +28,12 @@ class _MainMenuToggleState extends State<MainMenuToggle> {
   Widget build(BuildContext context) {
     return ToggleButtons(
       borderRadius: BorderRadius.circular(15),
-      fillColor: Colors.red,
+      fillColor: Theme.of(context).colorScheme.tertiaryContainer,
       constraints: BoxConstraints(minHeight: 42, minWidth: 84),
-      borderColor: Colors.blue,
+      borderColor: Theme.of(context).colorScheme.primaryContainer,
+      selectedBorderColor: Colors.amber,
+      disabledBorderColor: Colors.red,
+      borderWidth: 2,
       selectedColor: Colors.white,
       onPressed: (index) {
         setState(() {

@@ -1,13 +1,15 @@
+import 'package:der_die_das/constants/strings/app_strings.dart';
 import 'package:der_die_das/presentation/bloc/questionBloc/question_bloc.dart';
 import 'package:der_die_das/presentation/bloc/themeBloc/bloc/theme_bloc.dart';
 import 'package:der_die_das/presentation/widgets/cardQuestion/options_text.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-enum Answers { answer1, answer2, answer3 }
+enum Answers { der, die, das }
 
 class CardQuestion extends StatefulWidget {
   const CardQuestion({required this.question, this.textSize = 18, super.key});
@@ -19,7 +21,9 @@ class CardQuestion extends StatefulWidget {
 }
 
 class _CardQuestionState extends State<CardQuestion> {
-  String answer = 'Der';
+  var answer =
+      Answers
+          .der; //defaults to der, then its updated by different values of radioButtons. It resolves to an enum
 
   @override
   Widget build(BuildContext context) {
@@ -34,105 +38,100 @@ class _CardQuestionState extends State<CardQuestion> {
         ),
         borderRadius: BorderRadius.circular(45),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: RadioGroup(
+        groupValue: answer,
+        onChanged: (var value) {
+          setState(() {
+            answer = value!;
+          });
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
 
-        children: [
-          Gap(20),
-          BlocBuilder<ThemeBloc, ThemeState>(
-            builder: (context, state) {
-              final currentState = (state as Settings);
-              if (currentState.showsArticle) {
-                return Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    '$answer ${widget.question}',
-                    style: GoogleFonts.merriweather(
-                      textStyle: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+          children: [
+            Gap(20),
+            BlocBuilder<ThemeBloc, ThemeState>(
+              builder: (context, state) {
+                final currentState = (state as Settings);
+                if (currentState.showsArticle) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      '$answer ${widget.question}',
+                      style: GoogleFonts.merriweather(
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              } else if (!currentState.showsArticle) {
-                return Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    '___ ${widget.question}',
-                    style: GoogleFonts.merriweather(
-                      textStyle: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.tertiary,
+                  );
+                } else if (!currentState.showsArticle) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      '___ ${widget.question}',
+                      style: GoogleFonts.merriweather(
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }
-              return SizedBox();
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OptionsText(text: 'Der', textSize: widget.textSize),
-              Radio(
-                value: 'Der',
-                groupValue: answer,
-                onChanged: (value) {
-                  setState(() {
-                    answer = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OptionsText(text: 'Die', textSize: widget.textSize),
-              Radio(
-                value: 'Die',
-                groupValue: answer,
-                onChanged: (value) {
-                  setState(() {
-                    answer = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OptionsText(text: 'Das', textSize: widget.textSize),
-              Radio(
-                value: 'Das',
-                groupValue: answer,
-                onChanged: (value) {
-                  setState(() {
-                    answer = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-          Gap(18),
-
-          ElevatedButton(
-            onPressed: () {
-              context.read<QuestionBloc>().add(AnswerConfirmed(answer: answer));
-            },
-            child: Text(
-              'Answer',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  );
+                }
+                return SizedBox();
+              },
             ),
-          ),
-          SizedBox(height: 20),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OptionsText(
+                  text: AppStrings.derText,
+                  textSize: widget.textSize,
+                ),
+                Radio(value: Answers.der),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OptionsText(
+                  text: AppStrings.dieText,
+                  textSize: widget.textSize,
+                ),
+                Radio(value: Answers.die),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OptionsText(
+                  text: AppStrings.dasText,
+                  textSize: widget.textSize,
+                ),
+                Radio(value: Answers.das),
+              ],
+            ),
+            Gap(18),
+
+            ElevatedButton(
+              onPressed: () {
+                context.read<QuestionBloc>().add(
+                  AnswerConfirmed(answer: (answer.name).capitalize),
+                );
+              },
+              child: Text(
+                'Answer',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

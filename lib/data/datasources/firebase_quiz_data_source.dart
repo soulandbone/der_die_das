@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:der_die_das/data/datasources/quiz_datasource.dart';
 import 'package:der_die_das/domain/entities/question.dart';
 
-class FirebaseQuizDataSource {
+class FirebaseQuizDataSource implements QuizDataSource {
   final FirebaseFirestore firestore;
 
   FirebaseQuizDataSource(this.firestore);
 
+  @override
   Future<List<Question>> getQuestions() async {
-    var questionsRef = FirebaseFirestore.instance.collection('questions');
+    var questionsRef = firestore.collection('questions');
     var snapshot = await questionsRef.get();
 
     var list =

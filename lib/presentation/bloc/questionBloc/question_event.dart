@@ -9,8 +9,11 @@ class AnswerConfirmed extends QuestionEvent {
   final String answer;
 }
 
-class ResetQuiz extends QuestionEvent {
-  ResetQuiz();
+class ResetQuiz extends QuestionEvent {}
+
+class TimerTick extends QuestionEvent {
+  TimerTick(this.remaining);
+  final int remaining;
 }
 
 class ReturnToMainMenu extends QuestionEvent {}
