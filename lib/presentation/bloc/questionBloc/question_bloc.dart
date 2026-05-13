@@ -31,7 +31,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   final UpdateScore updateScore;
   final Ticker ticker;
 
-  StreamSubscription? _tickerSub;
+  StreamSubscription<int>? _tickerSub;
 
   List<Question> savedQuestions = []; //for cacheing the questions
 
@@ -51,7 +51,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   }
 
   @override
-  Future close() {
+  Future<void> close() {
     stopTicker(); // cancel subscription
     return super.close();
   }
@@ -117,6 +117,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     totalCorrect = correctAnswer ? totalCorrect + 1 : totalCorrect;
 
     if (currentIndex == questions.length - 1) {
+      stopTicker();
       emit(
         QuizFinished(
           quizType: currentState.quizType,
@@ -183,6 +184,10 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
     savedQuestions.shuffle();
 
+    if (numberOfQuestions > savedQuestions.length) {
+      numberOfQuestions = savedQuestions.length;
+    }
+
     final questionsToUse = savedQuestions.sublist(0, numberOfQuestions);
 
     emit(
@@ -207,6 +212,7 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   }
 
   void returnToMainMenu(ReturnToMainMenu _, Emitter<QuestionState> emit) {
+    stopTicker();
     emit(QuestionsLoaded(questions: savedQuestions));
   }
 }

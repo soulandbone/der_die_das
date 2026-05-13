@@ -3,7 +3,7 @@ import 'package:der_die_das/domain/contracts/ticker.dart';
 class RealTicker implements Ticker {
   // this is the actual stream that performs the calculation periodically/
   @override
-  Stream tick(int startingTime) {
+  Stream<int> tick(int startingTime) {
     return Stream.periodic(
       Duration(seconds: 1),
       (x) => startingTime - x - 1,

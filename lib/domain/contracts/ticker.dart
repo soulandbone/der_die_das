@@ -1,3 +1,3 @@
 abstract class Ticker {
-  Stream tick(int start);
+  Stream<int> tick(int start);
 }
