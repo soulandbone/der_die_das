@@ -21,9 +21,9 @@ class CardQuestion extends StatefulWidget {
 }
 
 class _CardQuestionState extends State<CardQuestion> {
-  var answer =
-      Answers
-          .der; //defaults to der, then its updated by different values of radioButtons. It resolves to an enum
+  var _groupValue = Answers.der;
+
+  //defaults to der, then its updated by different values of radioButtons. It resolves to an enum
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,11 @@ class _CardQuestionState extends State<CardQuestion> {
         ),
         borderRadius: BorderRadius.circular(45),
       ),
-      child: RadioGroup(
-        groupValue: answer,
-        onChanged: (var value) {
+      child: RadioGroup<Answers>(
+        groupValue: _groupValue,
+        onChanged: (Answers? value) {
           setState(() {
-            answer = value!;
+            _groupValue = value!;
           });
         },
         child: Column(
@@ -51,39 +51,23 @@ class _CardQuestionState extends State<CardQuestion> {
 
           children: [
             Gap(20),
-            BlocBuilder<ThemeBloc, ThemeState>(
+            BlocBuilder<ThemeBloc, Settings>(
               builder: (context, state) {
-                final currentState = (state as Settings);
-                if (currentState.showsArticle) {
-                  return Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      '$answer ${widget.question}',
-                      style: GoogleFonts.merriweather(
-                        textStyle: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                return Container(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    state.showsArticle
+                        ? '${_groupValue.name} ${widget.question}'
+                        : '___ ${widget.question}',
+                    style: GoogleFonts.merriweather(
+                      textStyle: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                  );
-                } else if (!currentState.showsArticle) {
-                  return Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      '___ ${widget.question}',
-                      style: GoogleFonts.merriweather(
-                        textStyle: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return SizedBox();
+                  ),
+                );
               },
             ),
             Row(
@@ -93,7 +77,7 @@ class _CardQuestionState extends State<CardQuestion> {
                   text: AppStrings.derText,
                   textSize: widget.textSize,
                 ),
-                Radio(value: Answers.der),
+                Radio<Answers>(value: Answers.der),
               ],
             ),
             Row(
@@ -103,7 +87,7 @@ class _CardQuestionState extends State<CardQuestion> {
                   text: AppStrings.dieText,
                   textSize: widget.textSize,
                 ),
-                Radio(value: Answers.die),
+                Radio<Answers>(value: Answers.die),
               ],
             ),
             Row(
@@ -113,7 +97,7 @@ class _CardQuestionState extends State<CardQuestion> {
                   text: AppStrings.dasText,
                   textSize: widget.textSize,
                 ),
-                Radio(value: Answers.das),
+                Radio<Answers>(value: Answers.das),
               ],
             ),
             Gap(18),
@@ -121,7 +105,7 @@ class _CardQuestionState extends State<CardQuestion> {
             ElevatedButton(
               onPressed: () {
                 context.read<QuestionBloc>().add(
-                  AnswerConfirmed(answer: (answer.name).capitalize),
+                  AnswerConfirmed(answer: (_groupValue.name).capitalize),
                 );
               },
               child: Text(

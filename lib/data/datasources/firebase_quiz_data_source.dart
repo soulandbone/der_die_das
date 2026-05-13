@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:der_die_das/data/datasources/quiz_datasource.dart';
-import 'package:der_die_das/domain/entities/question.dart';
+import 'package:der_die_das/data/models/question_model.dart';
 
 class FirebaseQuizDataSource implements QuizDataSource {
   final FirebaseFirestore firestore;
@@ -8,20 +8,10 @@ class FirebaseQuizDataSource implements QuizDataSource {
   FirebaseQuizDataSource(this.firestore);
 
   @override
-  Future<List<Question>> getQuestions() async {
+  Future<List<QuestionModel>> getQuestions() async {
     var questionsRef = firestore.collection('questions');
     var snapshot = await questionsRef.get();
 
-    var list =
-        snapshot.docs
-            .map(
-              (doc) => Question(
-                word: doc['word'],
-                correctAnswer: doc['correctAnswer'],
-              ),
-            )
-            .toList();
-
-    return list;
+    return snapshot.docs.map((e) => QuestionModel.fromMap(e.data())).toList();
   }
 }

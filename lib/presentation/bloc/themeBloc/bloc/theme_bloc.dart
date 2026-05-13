@@ -1,38 +1,23 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 part 'theme_event.dart';
 part 'theme_state.dart';
 
-class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
+class ThemeBloc extends Bloc<ThemeEvent, Settings> {
   ThemeBloc() : super(Settings(isDark: false, showsArticle: false)) {
     on<ToggleTheme>(toggleTheme);
     on<ToggleShowArticle>(toggleShowArticle);
   }
 
-  FutureOr<void> toggleTheme(
-    ToggleTheme event,
-    Emitter<ThemeState> emit,
-  ) async {
-    if (state is! Settings) return;
+  void toggleTheme(ToggleTheme _, Emitter<Settings> emit) {
+    final isDark = state.isDark;
 
-    final currentState = (state as Settings);
-    final isDark = currentState.isDark;
-    final showsArticle = currentState.showsArticle;
-
-    emit(Settings(isDark: !isDark, showsArticle: showsArticle));
+    emit(state.copyWith(isDark: !isDark));
   }
 
-  FutureOr<void> toggleShowArticle(
-    ToggleShowArticle event,
-    Emitter<ThemeState> emit,
-  ) async {
-    if (state is! Settings) return;
-    final currentState = (state as Settings);
-    final isDark = currentState.isDark;
-    final showsArticle = currentState.showsArticle;
-    emit(Settings(isDark: isDark, showsArticle: !showsArticle));
+  void toggleShowArticle(ToggleShowArticle _, Emitter<Settings> emit) {
+    final showsArticle = state.showsArticle;
+    emit(state.copyWith(showsArticle: !showsArticle));
   }
 }

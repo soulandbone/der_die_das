@@ -1,5 +1,5 @@
-import 'package:der_die_das/domain/entities/question.dart';
+import 'package:der_die_das/data/models/question_model.dart';
 
 abstract class QuizDataSource {
-  Future<List<Question>> getQuestions();
+  Future<List<QuestionModel>> getQuestions();
 }

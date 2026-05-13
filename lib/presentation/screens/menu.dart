@@ -8,6 +8,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
+enum TimedOption {
+  s30(30),
+  s60(60),
+  s120(120),
+  customSeconds(null);
+
+  const TimedOption(this.defaultSeconds);
+  final int? defaultSeconds;
+
+  int seconds(int customValue) => defaultSeconds ?? customValue;
+}
+
+enum UntimedOption {
+  q10(10),
+  q25(25),
+  q50(50),
+  customQuestions(null);
+
+  const UntimedOption(this.defaultQuestions);
+  final int? defaultQuestions;
+
+  int questions(int customValue) => defaultQuestions ?? customValue;
+}
+
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -17,20 +41,32 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   bool isTimed = true;
-  int timedSelection = 0;
-  int untimedSelection = 0;
+  TimedOption timedSelection = TimedOption.s30;
+  UntimedOption untimedSelection = UntimedOption.q10;
   int customSelectedValue = 20;
+
+  void _startQuiz() {
+    final quizBloc = context.read<QuestionBloc>();
+
+    if (isTimed) {
+      quizBloc.add(
+        StartTimedQuiz(time: timedSelection.seconds(customSelectedValue)),
+      );
+    } else {
+      quizBloc.add(
+        StartUntimedQuiz(
+          numberOfQuestions: untimedSelection.questions(customSelectedValue),
+        ),
+      );
+    }
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (context) => QuizScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<int> timedOptions = [30, 60, 120, 0]; //0 for Custom
-    final List<int> untimedOptions = [10, 25, 50, 0]; //0 for custom
-
-    TypeOfQuiz typeOfQuiz = isTimed ? TypeOfQuiz.timed : TypeOfQuiz.untimed;
-    int time = timedOptions[timedSelection];
-    int numberOfQuestions = untimedOptions[untimedSelection];
-
-    final quizBloc = context.read<QuestionBloc>();
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,99 +76,81 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
         //backgroundColor: Theme.of(context).colorScheme.onSecondary,
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
       body: BlocBuilder<QuestionBloc, QuestionState>(
         builder: (context, state) {
           if (state is QuestionsLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is QuestionsLoaded) {
-            return Column(
-              children: [
-                WelcomeBanner(),
-                Gap(40),
-                MainMenuToggle(
-                  labels: ['Timed', 'Untimed'],
-                  function: (index) {
-                    setState(() {
-                      isTimed =
-                          index ==
-                          0; //resets the values for timedSelection and untimedSelection each time that it is changed
-                      timedSelection = 0;
-                      untimedSelection = 0;
-                      //print('Quiz isTimed is set to $isTimed');
-                    });
-                  },
-                ),
-                Gap(15),
-                isTimed
-                    ? MainMenuToggle(
-                      key: ValueKey('timed'),
-                      labels: ['30 secs', '60 secs', '120 secs', 'Custom'],
-                      function: (index) {
-                        setState(() {
-                          timedSelection = index;
-                        });
-                      },
-                    )
-                    : MainMenuToggle(
-                      key: ValueKey('untimed'),
-                      labels: ['10 Q#s', '25 Q#s', '50 Q#s', 'Custom'],
-                      function: (int index) {
-                        setState(() {
-                          // if (isTimed) {
-                          //   timedSelection = index;
-                          // } else {
-                          //   untimedSelection = index;
-                          // }
-                          untimedSelection = index;
-                        });
-                      },
-                    ),
-                Gap(15),
-                (timedSelection == 3 || untimedSelection == 3)
-                    ? CustomSlider(
-                      isTimed: isTimed,
-                      sliderValue: customSelectedValue.toDouble(),
-                      onChanged: (double value) {
-                        setState(() {
-                          customSelectedValue = value.toInt();
-                        });
-                      },
-                    )
-                    : Gap(200),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 220),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => QuizScreen()),
-                      );
-                      quizBloc.add(
-                        StartQuizWithOptions(
-                          quizType: typeOfQuiz,
-                          time:
-                              (isTimed && timedSelection == 3)
-                                  ? customSelectedValue
-                                  : isTimed
-                                  ? time
-                                  : null,
-                          numberOfQuestions:
-                              (!isTimed && untimedSelection == 3)
-                                  ? customSelectedValue
-                                  : !isTimed
-                                  ? numberOfQuestions
-                                  : null,
-                        ),
-                      ); // seguir desde aqui
+            return SafeArea(
+              child: Column(
+                children: [
+                  const WelcomeBanner(),
+                  const Gap(40),
+                  MainMenuToggle(
+                    labels: ['Timed', 'Untimed'],
+                    function: (index) {
+                      setState(() {
+                        isTimed =
+                            index ==
+                            0; //resets the values for timedSelection and untimedSelection each time that it is changed
+                        timedSelection = TimedOption.s30;
+                        untimedSelection = UntimedOption.q10;
+                        //print('Quiz isTimed is set to $isTimed');
+                      });
                     },
-                    child: Text('Start Quiz', style: TextStyle(fontSize: 22)),
                   ),
-                ),
-              ],
+                  const Gap(15),
+                  isTimed
+                      ? MainMenuToggle(
+                        key: const ValueKey('timed'),
+                        labels: ['30 secs', '60 secs', '120 secs', 'Custom'],
+                        function: (index) {
+                          setState(() {
+                            timedSelection = TimedOption.values[index];
+                          });
+                        },
+                      )
+                      : MainMenuToggle(
+                        key: const ValueKey('untimed'),
+                        labels: ['10 Q#s', '25 Q#s', '50 Q#s', 'Custom'],
+                        function: (int index) {
+                          setState(() {
+                            untimedSelection = UntimedOption.values[index];
+                          });
+                        },
+                      ),
+                  const Gap(15),
+                  (timedSelection == TimedOption.customSeconds ||
+                          untimedSelection == UntimedOption.customQuestions)
+                      ? CustomSlider(
+                        isTimed: isTimed,
+                        sliderValue: customSelectedValue.toDouble(),
+                        onChanged: (double value) {
+                          setState(() {
+                            customSelectedValue = value.toInt();
+                          });
+                        },
+                      )
+                      : const SizedBox.shrink(),
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: height * 0.3),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _startQuiz();
+                      },
+                      child: const Text(
+                        'Start Quiz',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
-          return SizedBox();
+          return const SizedBox();
         },
       ),
     );

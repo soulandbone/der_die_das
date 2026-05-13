@@ -1,4 +1,4 @@
-import 'package:der_die_das/data/ticker/real_ticker.dart';
+import 'package:der_die_das/domain/contracts/ticker.dart';
 import 'package:der_die_das/domain/usecases/check_answer.dart';
 import 'package:der_die_das/domain/usecases/get_questions.dart';
 import 'package:der_die_das/domain/usecases/update_score.dart';
@@ -19,43 +19,41 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   setup(); // initializing dependencies
 
-  final themeBloc = ThemeBloc();
-
-  runApp(BlocProvider.value(value: themeBloc, child: MyApp()));
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    //  final getIt = GetIt.instance;
-
-    final currentState = context.watch<ThemeBloc>().state;
-
-    return MultiBlocProvider(
+  runApp(
+    MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => ThemeBloc()),
         BlocProvider(
           create:
               (context) => QuestionBloc(
                 getIt<GetQuestions>(),
                 getIt<CheckAnswer>(),
                 getIt<UpdateScore>(),
-                getIt<RealTicker>(),
+                getIt<Ticker>(),
               )..add(LoadQuestions()),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme:
-            (currentState as Settings).isDark
-                ? FlexThemeData.dark(scheme: FlexScheme.flutterDash)
-                : FlexThemeData.light(scheme: FlexScheme.flutterDash),
-        //: FlexThemeData.light(),
-        home: MenuScreen(), //HomeScreen(),
-      ),
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final currentState = context.watch<ThemeBloc>().state;
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme:
+          (currentState).isDark
+              ? FlexThemeData.dark(scheme: FlexScheme.flutterDash)
+              : FlexThemeData.light(scheme: FlexScheme.flutterDash),
+      //: FlexThemeData.light(),
+      home: MenuScreen(), //HomeScreen(),
     );
   }
 }

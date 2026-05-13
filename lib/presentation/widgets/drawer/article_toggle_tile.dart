@@ -21,7 +21,7 @@ class ArticleToggleTile extends StatelessWidget {
         ],
       ),
       trailing: Switch(
-        value: (currentState as Settings).showsArticle,
+        value: currentState.showsArticle,
         onChanged: (value) {
           themeBloc.add(ToggleShowArticle());
         },

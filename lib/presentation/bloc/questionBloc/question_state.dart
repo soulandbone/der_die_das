@@ -2,9 +2,7 @@ part of 'question_bloc.dart';
 
 enum TypeOfQuiz { timed, untimed }
 
-abstract class QuestionState {}
-
-final class QuestionInitial extends QuestionState {}
+sealed class QuestionState {}
 
 class QuestionsLoading extends QuestionState {}
 
@@ -32,27 +30,27 @@ class QuizFinished extends QuestionState {
 
 class QuizInProgress extends QuestionState {
   QuizInProgress({
-    this.questions,
-    this.currentScore,
-    this.currentIndex,
-    this.totalCorrect,
-    this.remainingTime,
-    this.startingTime,
-    this.numberOfQuestions,
-    this.quizType,
+    required this.questions,
+    required this.currentScore,
+    required this.currentIndex,
+    required this.totalCorrect,
+    required this.remainingTime,
+    required this.startingTime,
+    required this.numberOfQuestions,
+    required this.quizType,
   });
 
-  final List<Question>? questions;
-  final int? currentScore;
-  final int? currentIndex;
-  final int? totalCorrect;
-  final int? remainingTime;
-  final int? startingTime;
-  final int? numberOfQuestions;
-  final TypeOfQuiz? quizType;
+  final List questions;
+  final int currentScore;
+  final int currentIndex;
+  final int totalCorrect;
+  final int remainingTime;
+  final int startingTime;
+  final int numberOfQuestions;
+  final TypeOfQuiz quizType;
 
   QuizInProgress copyWith({
-    List<Question>? questions,
+    List? questions,
     int? currentScore,
     int? currentIndex,
     int? totalCorrect,

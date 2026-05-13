@@ -3,7 +3,7 @@ class Question {
   final String correctAnswer;
   final List<String> options;
 
-  Question._({
+  const Question._({
     required this.word,
     required this.correctAnswer,
     required this.options,
@@ -13,7 +13,9 @@ class Question {
     return Question._(
       word: word,
       correctAnswer: correctAnswer,
-      options: ['Der', 'Die', 'Das'],
+      options: List.unmodifiable(['Der', 'Die', 'Das']),
     );
   }
+
+  bool isCorrect(String answer) => answer == correctAnswer;
 }

@@ -12,6 +12,8 @@ class AnswerConfirmed extends QuestionEvent {
 class ResetQuiz extends QuestionEvent {}
 
 class TimerTick extends QuestionEvent {
+  // each time one of these events are thrown, we need to know how much time left there is
+
   TimerTick(this.remaining);
   final int remaining;
 }
@@ -20,13 +22,14 @@ class ReturnToMainMenu extends QuestionEvent {}
 
 class StartQuiz extends QuestionEvent {}
 
-class StartQuizWithOptions extends QuestionEvent {
-  StartQuizWithOptions({
-    this.numberOfQuestions,
-    this.time,
-    required this.quizType,
-  });
-  final int? numberOfQuestions;
-  final int? time;
-  final TypeOfQuiz quizType;
+class StartTimedQuiz extends QuestionEvent {
+  StartTimedQuiz({required this.time});
+
+  final int time;
+}
+
+class StartUntimedQuiz extends QuestionEvent {
+  StartUntimedQuiz({required this.numberOfQuestions});
+
+  final int numberOfQuestions;
 }

@@ -31,23 +31,21 @@ class QuizScreen extends StatelessWidget {
             var isTimed = state.quizType == TypeOfQuiz.timed;
             var timeLeft = 0;
             var startingTime = 0;
-            if (isTimed &&
-                state.remainingTime != null &&
-                state.startingTime != null) {
-              timeLeft = state.remainingTime!;
-              startingTime = state.startingTime!;
+            if (isTimed) {
+              timeLeft = state.remainingTime;
+              startingTime = state.startingTime;
             }
 
             return Column(
               children: [
-                CurrentScore(state.currentScore!),
+                CurrentScore(state.currentScore),
                 Gap(80),
                 isTimed
                     ? FullTimer(timeLeft: timeLeft, startingTime: startingTime)
                     : SizedBox(),
                 Gap(50),
                 CardQuestion(
-                  question: state.questions![state.currentIndex!].word,
+                  question: state.questions[state.currentIndex].word,
                 ),
               ],
             );

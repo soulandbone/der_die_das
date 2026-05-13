@@ -7,7 +7,11 @@ class QuizRepositoryImpl implements QuizRepository {
 
   QuizRepositoryImpl(this.dataSource);
   @override
-  Future<List<Question>> fetchQuestions() {
-    return dataSource.getQuestions();
+  Future<List<Question>> fetchQuestions() async {
+    final models = await dataSource.getQuestions();
+
+    return models
+        .map((e) => Question(word: e.word, correctAnswer: e.correctAnswer))
+        .toList();
   }
 }

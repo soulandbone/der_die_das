@@ -6,8 +6,7 @@ class GetQuestions {
 
   GetQuestions({required this.repository});
 
-  Future<List<Question>> call() async {
-    final questions = await repository.fetchQuestions();
-    return questions;
+  Future<List<Question>> call() {
+    return repository.fetchQuestions();
   }
 }

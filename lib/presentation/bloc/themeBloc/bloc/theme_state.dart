@@ -1,10 +1,15 @@
 part of 'theme_bloc.dart';
 
 @immutable
-sealed class ThemeState {}
-
-final class Settings extends ThemeState {
-  Settings({required this.isDark, required this.showsArticle});
+class Settings {
+  const Settings({required this.isDark, required this.showsArticle});
   final bool isDark;
   final bool showsArticle;
+
+  Settings copyWith({bool? isDark, bool? showsArticle}) {
+    return Settings(
+      isDark: isDark ?? this.isDark,
+      showsArticle: showsArticle ?? this.showsArticle,
+    );
+  }
 }

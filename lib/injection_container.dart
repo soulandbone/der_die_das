@@ -3,6 +3,7 @@ import 'package:der_die_das/data/datasources/firebase_quiz_data_source.dart';
 import 'package:der_die_das/data/datasources/quiz_datasource.dart';
 import 'package:der_die_das/data/repositories/quiz_repository_impl.dart';
 import 'package:der_die_das/data/ticker/real_ticker.dart';
+import 'package:der_die_das/domain/contracts/ticker.dart';
 import 'package:der_die_das/domain/repositories/quiz_repository.dart';
 
 import 'package:der_die_das/domain/usecases/check_answer.dart';
@@ -16,7 +17,7 @@ void setup() {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
-  getIt.registerLazySingleton<RealTicker>(() => RealTicker());
+  getIt.registerLazySingleton<Ticker>(() => RealTicker());
   getIt.registerLazySingleton<QuizDataSource>(
     () => FirebaseQuizDataSource(getIt<FirebaseFirestore>()),
   );
