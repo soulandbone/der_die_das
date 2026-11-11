@@ -7,6 +7,8 @@ class RealTicker implements Ticker {
     return Stream.periodic(
       Duration(seconds: 1),
       (x) => startingTime - x - 1,
+    ).takeWhile(
+      (remainingTime) => remainingTime >= 0,
     ); //starts from x 0, so we want the first tick to actually be 29 and not 30 for example (what happens after one second
   }
 }

@@ -37,22 +37,22 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
 
   Map<String, dynamic>? initialValues;
 
-  void startTicker(int startingTime) {
+  Future<void> startTicker(int startingTime) async {
     if (startingTime <= 0) return;
-    stopTicker();
+    await stopTicker(); //ensures the previous ticker subscription is cancelled, and only then it starts listening to the new stream
     _tickerSub = ticker.tick(startingTime).listen((remaining) {
       add(TimerTick(remaining));
     });
   }
 
-  void stopTicker() {
-    _tickerSub?.cancel();
+  Future<void> stopTicker() async {
+    await _tickerSub?.cancel();
     _tickerSub = null;
   }
 
   @override
-  Future<void> close() {
-    stopTicker(); // cancel subscription
+  Future<void> close() async {
+    await stopTicker(); // cancel subscription
     return super.close();
   }
 
@@ -76,20 +76,19 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     }
   }
 
-  void timerTick(TimerTick event, Emitter<QuestionState> emit) {
+  Future<void> timerTick(TimerTick event, Emitter<QuestionState> emit) async {
     if (state is! QuizInProgress) return;
     final currentState = state as QuizInProgress;
     final remainingTime = event.remaining;
 
     if (currentState.remainingTime == remainingTime) return;
-
     if (remainingTime > 0) {
       emit(currentState.copyWith(remainingTime: remainingTime));
     } else {
-      stopTicker(); //time reached zero, quiz has finished
+      await stopTicker(); //time reached zero, quiz has finished
       emit(
         QuizFinished(
-          totalQuestions: ((currentState.currentIndex)),
+          totalQuestions: currentState.currentIndex,
           correctQuestions: currentState.totalCorrect,
           quizType: currentState.quizType,
         ),
@@ -103,8 +102,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     final questions = currentState.questions;
     var currentIndex = currentState.currentIndex;
     var currentScore = currentState.currentScore;
+
     var totalCorrect = currentState.totalCorrect;
-    var remainingTime = currentState.remainingTime;
     var correctAnswer = checkAnswer(
       question: questions[currentIndex],
       answer: event.answer,
@@ -131,7 +130,6 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
           currentIndex: currentIndex + 1,
           totalCorrect: totalCorrect,
           currentScore: score,
-          remainingTime: remainingTime,
         ),
       );
     }

@@ -10,7 +10,7 @@ class Summary extends StatelessWidget {
     super.key,
   });
 
-  final double totalQuestions;
+  final int totalQuestions;
   final double correctQuestions;
 
   @override
